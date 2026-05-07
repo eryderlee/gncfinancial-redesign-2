@@ -1,0 +1,208 @@
+---
+// Vanilla CSS + Intersection Observer approach — no animation framework needed.
+// Hero text uses CSS keyframes (auto-runs on page load).
+// Reveal-on-scroll uses IntersectionObserver to add `.in-view` class.
+// Counter uses requestAnimationFrame.
+// Magnetic button uses simple transform updates.
+---
+
+<script>
+  function initAnimations() {
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // ===== SCROLL REVEAL (.reveal -> .in-view) =====
+    const reveals = document.querySelectorAll<HTMLElement>(".reveal");
+
+    if (prefersReduced) {
+      reveals.forEach((el) => el.classList.add("in-view"));
+    } else {
+      const seen = new WeakSet<HTMLElement>();
+
+      // For grids with multiple reveals, set staggered delay attribute
+      document.querySelectorAll<HTMLElement>(".grid").forEach((grid) => {
+        const gridReveals = Array.from(grid.querySelectorAll<HTMLElement>(":scope > .reveal"));
+        gridReveals.forEach((el, i) => {
+          el.style.setProperty("--reveal-delay", `${i * 80}ms`);
+        });
+      });
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const el = entry.target as HTMLElement;
+              if (!seen.has(el)) {
+                seen.add(el);
+                el.classList.add("in-view");
+              }
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.05 }
+      );
+
+      reveals.forEach((el) => io.observe(el));
+    }
+
+    // ===== COUNTER ANIMATION (data-counter) =====
+    const counters = document.querySelectorAll<HTMLElement>("[data-counter]");
+    const counterIO = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          const target = parseInt(el.dataset.counter || "0", 10);
+          if (isNaN(target) || target === 0) return;
+          const suffix = (el.textContent || "").replace(/\d+/, "").trim();
+          const duration = prefersReduced ? 50 : 1800;
+          const start = performance.now();
+          function tick(now: number) {
+            const t = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - t, 3);
+            el.textContent = Math.floor(target * eased) + suffix;
+            if (t < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
+          counterIO.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.4 }
+    );
+    counters.forEach((el) => counterIO.observe(el));
+
+    // ===== MAGNETIC BUTTONS =====
+    if (!prefersReduced) {
+      document.querySelectorAll<HTMLElement>(".btn-magnetic").forEach((el) => {
+        let raf: number | null = null;
+        let targetX = 0,
+          targetY = 0,
+          currentX = 0,
+          currentY = 0;
+
+        function animate() {
+          currentX += (targetX - currentX) * 0.2;
+          currentY += (targetY - currentY) * 0.2;
+          el.style.transform = `translate(${currentX}px, ${currentY}px)`;
+          if (Math.abs(targetX - currentX) > 0.1 || Math.abs(targetY - currentY) > 0.1) {
+            raf = requestAnimationFrame(animate);
+          } else {
+            raf = null;
+          }
+        }
+
+        el.addEventListener("mousemove", (e) => {
+          const rect = el.getBoundingClientRect();
+          targetX = (e.clientX - rect.left - rect.width / 2) * 0.25;
+          targetY = (e.clientY - rect.top - rect.height / 2) * 0.25;
+          if (!raf) raf = requestAnimationFrame(animate);
+        });
+        el.addEventListener("mouseleave", () => {
+          targetX = 0;
+          targetY = 0;
+          if (!raf) raf = requestAnimationFrame(animate);
+        });
+      });
+    }
+
+    // ===== REVERSIBLE UNDERLINE (credo "three decades") =====
+    // Toggles .is-visible based on whether the underline is in view, so the
+    // hand-drawn stroke draws/un-draws as you scroll past either direction.
+    const underlines = document.querySelectorAll<HTMLElement>("[data-credo-underline]");
+    if (underlines.length) {
+      const underlineIO = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            entry.target.classList.toggle("is-visible", entry.isIntersecting);
+          });
+        },
+        { rootMargin: "-15% 0px -25% 0px", threshold: 0 }
+      );
+      underlines.forEach((el) => underlineIO.observe(el));
+    }
+
+    // ===== CTA "ARRIVED" GLOW (line tip lands on booking button) =====
+    const ctaTarget = document.getElementById("line-target");
+    if (ctaTarget) {
+      document.addEventListener("cta-line-reached", () => {
+        ctaTarget.classList.add("cta-arrived");
+      });
+      document.addEventListener("cta-line-left", () => {
+        ctaTarget.classList.remove("cta-arrived");
+      });
+    }
+
+    // ===== READING PROGRESS BAR =====
+    const progressBar = document.querySelector<HTMLElement>(".reading-progress");
+    if (progressBar) {
+      const onScroll = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const scaled = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+        progressBar.style.transform = `scaleX(${scaled})`;
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    }
+  }
+
+  // Run immediately if DOM already parsed, otherwise wait
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAnimations);
+  } else {
+    initAnimations();
+  }
+
+  // Re-run on Astro view-transition page navigations
+  document.addEventListener("astro:page-load", initAnimations);
+</script>
+
+<style is:global>
+  /* ===== HERO TEXT REVEAL (CSS keyframes, no JS needed) ===== */
+  @keyframes heroReveal {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero-title {
+    animation: heroReveal 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+  }
+  .hero-subtitle {
+    animation: heroReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+  }
+  .hero-cta {
+    animation: heroReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+  }
+
+  /* ===== SCROLL REVEAL ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-title,
+    .hero-subtitle,
+    .hero-cta {
+      animation: none;
+    }
+    .reveal {
+      transition: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,787 @@
+---
+import Page from '../layouts/Page.astro';
+import ScrollLine from '../components/ScrollLine.astro';
+
+const services = [
+  {
+    title: 'Tax',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="m8 10 4 4"/><path d="m12 10-4 4"/></svg>`,
+    description: 'Individual and business tax returns, tax planning, and capital gains advice — filed on time, every time.',
+    href: '/services/#tax',
+  },
+  {
+    title: 'Business Accounting',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>`,
+    description: 'Financial statements, BAS and GST lodgment, and ASIC compliance for businesses of every size.',
+    href: '/services/#business-accounting',
+  },
+  {
+    title: 'Bookkeeping',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/></svg>`,
+    description: 'Day-to-day books managed in Xero, MYOB, or QuickBooks — so you can focus on the work that matters.',
+    href: '/services/#bookkeeping',
+  },
+  {
+    title: 'Business Advisory',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+    description: 'Practical guidance on structure, strategy, and growth — from someone who understands small business.',
+    href: '/services/#advisory',
+  },
+  {
+    title: 'SMSF & Specialist',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>`,
+    description: 'Self-managed super fund compliance, crypto tax, investment property, and estate planning guidance.',
+    href: '/services/#smsf-specialist',
+  },
+];
+
+// Google reviews — pull-quotes only (first name + suburb), star rating
+const reviews = [
+  {
+    quote: 'Glenn made the whole process so easy. He explained everything in plain English and found deductions I had no idea about. Highly recommend.',
+    name: 'Sarah',
+    suburb: 'Bella Vista',
+    rating: 5,
+    date: '2 weeks ago',
+  },
+  {
+    quote: 'Best accountant in the Hills District. Switched from a big firm and the difference is night and day — actually picks up the phone and knows my business.',
+    name: 'Michael',
+    suburb: 'Castle Hill',
+    rating: 5,
+    date: '1 month ago',
+  },
+  {
+    quote: "Been with GNC Financial for years. They handle everything — tax, BAS, bookkeeping — and I never have to chase them. Worth every cent.",
+    name: 'Priya',
+    suburb: 'Baulkham Hills',
+    rating: 5,
+    date: '2 months ago',
+  },
+  {
+    quote: "Sorted out my SMSF compliance after my previous accountant retired. Quick, professional, no fuss — exactly what you want.",
+    name: 'David',
+    suburb: 'Kellyville',
+    rating: 5,
+    date: '3 months ago',
+  },
+  {
+    quote: 'As a tradie my paperwork was a mess. Glenn untangled everything and now I actually know where my business stands. Top bloke.',
+    name: 'James',
+    suburb: 'Rouse Hill',
+    rating: 5,
+    date: '4 months ago',
+  },
+  {
+    quote: "First time investor with a rental property. They walked me through every deduction and the tax return came back better than expected.",
+    name: 'Emma',
+    suburb: 'Norwest',
+    rating: 5,
+    date: '5 months ago',
+  },
+];
+
+const insights = [
+  {
+    title: 'Tax Time 2025: What Every Small Business Owner Needs to Know',
+    slug: 'tax-time-2025-small-business',
+    category: 'Tax',
+    date: '2025-06-01',
+    excerpt: 'Key deadlines, new deductions, and common mistakes to avoid this financial year. A practical checklist for Hills District business owners.',
+  },
+  {
+    title: 'Xero vs MYOB vs QuickBooks: Which Is Right for Your Business?',
+    slug: 'xero-vs-myob-vs-quickbooks',
+    category: 'Bookkeeping',
+    date: '2025-04-15',
+    excerpt: 'We break down the three biggest cloud accounting platforms to help you pick the one that fits your workflow and budget.',
+  },
+  {
+    title: 'Do You Actually Need an Accountant for Your Investment Property?',
+    slug: 'accountant-for-investment-property',
+    category: 'Property',
+    date: '2025-03-10',
+    excerpt: "Negative gearing, depreciation schedules, CGT — here's when DIY stops making sense and professional help pays for itself.",
+  },
+  {
+    title: 'Crypto Tax in Australia: What the ATO Expects in 2025',
+    slug: 'crypto-tax-australia-2025',
+    category: 'Tax',
+    date: '2025-02-20',
+    excerpt: "The ATO is watching crypto closely. Here's what you need to report, how CGT applies, and the records you should be keeping.",
+  },
+  {
+    title: 'Setting Up Your First SMSF: Is It Worth It?',
+    slug: 'setting-up-first-smsf',
+    category: 'SMSF',
+    date: '2025-01-15',
+    excerpt: "Self-managed super funds offer control and flexibility — but they're not for everyone. We outline the costs, compliance, and who benefits most.",
+  },
+  {
+    title: 'ABN, ACN, TFN — What Do You Actually Need?',
+    slug: 'abn-acn-tfn-explained',
+    category: 'Business',
+    date: '2024-11-08',
+    excerpt: "Starting a business? Here's a plain-English guide to the registrations you need (and the ones you probably don't).",
+  },
+  {
+    title: 'BAS Lodgment: Quarterly vs Monthly — Which Is Better?',
+    slug: 'bas-quarterly-vs-monthly',
+    category: 'BAS',
+    date: '2024-09-22',
+    excerpt: 'The answer depends on your turnover and cash flow. We break down the pros and cons so you can choose with confidence.',
+  },
+  {
+    title: 'Five Tax Deductions Hills District Tradies Often Miss',
+    slug: 'tax-deductions-tradies',
+    category: 'Tax',
+    date: '2024-08-05',
+    excerpt: "Tools, travel, training, and more — if you're a tradie, make sure you're not leaving money on the table at tax time.",
+  },
+];
+
+// Ridge timeline data — 8 posts × 10 bars per group = 80 bars.
+// The middle bar of each group of 10 is a "post anchor" with a date label.
+const RIDGE_STRIDE = 10;
+const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) => {
+  const groupIdx = Math.floor(i / RIDGE_STRIDE);
+  const isAnchor = i % RIDGE_STRIDE === Math.floor(RIDGE_STRIDE / 2);
+  if (!isAnchor) return { postIndex: null, date: null };
+  const post = insights[groupIdx];
+  const d = new Date(post.date);
+  return {
+    postIndex: groupIdx,
+    date: d.toLocaleDateString('en-AU', { month: 'short', year: 'numeric' }).toUpperCase(),
+  };
+});
+---
+
+<Page
+  title="Home"
+  description="GNC Financial — local accountants in the Hills District. Tax returns, business accounting, bookkeeping, and advisory services for individuals and SMEs across Sydney."
+  canonicalPath="/"
+>
+  <!-- JSON-LD -->
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://gncfinancial.com.au/#business",
+    "name": "GNC Financial",
+    "image": "https://gncfinancial.com.au/logo.png",
+    "url": "https://gncfinancial.com.au",
+    "telephone": ["+61284032770", "+61288606520"],
+    "email": "admin@gncfinancial.com.au",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Suite 111, 33 Lexington Drive, East Block, Level 1",
+      "addressLocality": "Bella Vista",
+      "addressRegion": "NSW",
+      "postalCode": "2153",
+      "addressCountry": "AU"
+    },
+    "areaServed": [
+      "Baulkham Hills", "Castle Hill", "Bella Vista", "Winston Hills",
+      "Kellyville", "Rouse Hill", "Norwest", "Seven Hills", "Parramatta",
+      "Hills District", "Blacktown", "South West Sydney"
+    ],
+    "priceRange": "$$",
+    "description": "Local accountants in the Hills District offering tax returns, business accounting, bookkeeping, and advisory services.",
+    "sameAs": [
+      "https://www.instagram.com/gncfinancial/",
+      "https://www.facebook.com/profile.php?id=61568291158118",
+      "https://www.linkedin.com/company/www.gncfinancial.com.au/"
+    ]
+  })} />
+
+  <!-- ============================================
+       HERO — Animated mesh gradient, dark bg, full viewport
+       ============================================ -->
+  <section class="hero-gradient hero-anchor relative min-h-screen flex items-center -mt-16 md:-mt-20 pt-32 pb-20 md:pt-40 md:pb-28">
+    <!-- Decorative soft dot, far right -->
+    <div class="accent-dot-lg top-[20%] right-[12%] hidden lg:block"></div>
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 w-full">
+      <div class="max-w-2xl">
+        <h1 class="font-display text-4xl md:text-5xl lg:text-[3.75rem] font-semibold text-white leading-[1.08] mb-5 hero-title">
+          Numbers, sorted.
+          <br />
+          <span class="text-surface-400">Your local accountants in the Hills&nbsp;District.</span>
+        </h1>
+        <p class="text-lg text-surface-400 mb-10 max-w-lg hero-subtitle">
+          Straightforward tax, accounting, and business advice from a firm that's been in your corner for over 30&nbsp;years.
+        </p>
+        <div class="flex flex-wrap items-center gap-4 hero-cta">
+          <a
+            href="/contact/"
+            class="btn-magnetic inline-flex items-center bg-accent-600 hover:bg-accent-500 active:bg-accent-700 text-white font-medium py-3.5 px-8 rounded-lg transition-all duration-200 text-sm shadow-lg shadow-accent-600/25"
+            id="hero-cta"
+          >
+            Book a free consult
+          </a>
+          <a
+            href="/services/"
+            class="inline-flex items-center text-surface-300 font-medium text-sm hover:text-white transition-colors duration-150 underline underline-offset-4 decoration-surface-600 hover:decoration-accent-600"
+          >
+            See services
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====  SCROLL-LINE WRAPPER  =====
+       The orange line draws itself from the credo dot down to the
+       booking CTA as the user scrolls. -->
+  <div class="scroll-line-parent relative">
+    <ScrollLine />
+
+  <!-- ============================================
+       CREDO — centered, with orange dot anchor
+       (line starts here; ends at the booking button)
+       ============================================ -->
+  <section class="py-20 md:py-28 bg-surface-50 relative overflow-hidden">
+    <!-- Subtle dot grid -->
+    <div class="absolute inset-0 opacity-[0.035] pointer-events-none" style="background-image: radial-gradient(circle, #0E0E0E 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 text-center relative">
+      <div class="reveal credo-block">
+        <span id="line-source" class="accent-dot mx-auto mb-6 block"></span>
+        <p class="font-display text-2xl md:text-3xl text-ink-800 max-w-2xl mx-auto leading-relaxed font-medium">
+          Down-to-earth, personal service from a local accountant who's spent
+          <span class="credo-underline" data-credo-underline>
+            three decades
+            <svg class="credo-underline-svg" viewBox="0 0 240 12" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <filter id="credo-rough" x="-2%" y="-20%" width="104%" height="140%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="4" />
+                  <feDisplacementMap in="SourceGraphic" scale="0.6" />
+                </filter>
+              </defs>
+              <path
+                class="credo-underline-stroke"
+                d="M4 7 C70 5, 150 8, 236 6"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                fill="none"
+                filter="url(#credo-rough)"
+              />
+            </svg>
+          </span>
+          helping Hills District businesses and families get&nbsp;ahead.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SERVICES — centered heading, 5 cards in centered grid
+       ============================================ -->
+  <section class="py-20 md:py-28 bg-surface-200">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="text-center mb-14 reveal">
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-ink-800 mb-4">What we do</h2>
+        <p class="text-ink-500 max-w-lg mx-auto">
+          Five areas of focus — one team that knows them inside out.
+        </p>
+      </div>
+      <div class="services-grid grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+        {services.map((service, i) => (
+          <a
+            href={service.href}
+            class:list={[
+              "group block bg-surface-50 border border-surface-300 rounded-2xl p-7 md:p-9 card-hover reveal",
+              `stagger-${i + 1}`,
+            ]}
+          >
+            <div class="w-12 h-12 rounded-xl bg-accent-50 flex items-center justify-center text-accent-600 mb-5 group-hover:bg-accent-600 group-hover:text-white transition-colors duration-200" set:html={service.icon} />
+            <h3 class="font-display text-xl font-medium text-ink-800 mb-2 group-hover:text-accent-700 transition-colors duration-150">
+              {service.title}
+            </h3>
+            <p class="text-sm text-ink-500 leading-relaxed mb-4">{service.description}</p>
+            <span class="text-sm font-medium text-ink-800 group-hover:text-accent-700 transition-colors duration-150">
+              Learn more &rarr;
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       STAT STRIP — dark, with animated counters
+       ============================================ -->
+  <section class="bg-ink-900 py-16 md:py-20 relative overflow-hidden">
+    <!-- Subtle diagonal lines texture -->
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,0.1) 35px, rgba(255,255,255,0.1) 36px);"></div>
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 relative">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
+        <div class="reveal">
+          <div class="font-display text-4xl md:text-5xl font-semibold text-white mb-2" data-counter="30">30+</div>
+          <div class="text-sm text-ink-300 uppercase tracking-wider">Years' experience</div>
+        </div>
+        <div class="reveal">
+          <div class="font-display text-4xl md:text-5xl font-semibold text-white mb-2">Hills District</div>
+          <div class="text-sm text-ink-300 uppercase tracking-wider">Locally based</div>
+        </div>
+        <div class="reveal">
+          <div class="font-display text-4xl md:text-5xl font-semibold text-white mb-2">5<span class="text-accent-500">★</span></div>
+          <div class="text-sm text-ink-300 uppercase tracking-wider">Google reviews</div>
+        </div>
+        <div class="reveal">
+          <div class="font-display text-4xl md:text-5xl font-semibold text-white mb-2">Xero · MYOB</div>
+          <div class="text-sm text-ink-300 uppercase tracking-wider">QuickBooks certified</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       GOOGLE REVIEWS — auto-scrolling marquee
+       ============================================ -->
+  <section class="reviews-section py-20 md:py-28 bg-ink-950 relative overflow-hidden">
+    <!-- Section heading -->
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="text-center mb-14 reveal">
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-white mb-5">What our clients say</h2>
+        <div class="inline-flex items-center gap-3 bg-ink-900 border border-ink-700 rounded-full px-5 py-2.5">
+          <!-- Google "G" mark, multi-colour brand asset (used for attribution) -->
+          <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+            <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+            <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+            <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+          </svg>
+          <span class="text-sm text-surface-300">
+            <span class="font-semibold text-white">5.0</span>
+            <span class="mx-1.5">·</span>
+            <span class="text-accent-500" aria-hidden="true">★★★★★</span>
+            <span class="mx-1.5">·</span>
+            10+ Google reviews
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marquee track (two copies for seamless loop) -->
+    <div class="reviews-marquee relative" aria-roledescription="testimonial carousel">
+      <div class="reviews-track flex gap-6 md:gap-8 w-max">
+        {[...reviews, ...reviews].map((r, i) => (
+          <article
+            class="review-card shrink-0 w-[320px] md:w-[380px] bg-ink-900 border border-ink-700 rounded-2xl p-6 md:p-7 flex flex-col"
+            aria-hidden={i >= reviews.length ? 'true' : undefined}
+          >
+            <header class="flex items-start gap-3 mb-4">
+              <div class="w-11 h-11 rounded-full bg-accent-600 flex items-center justify-center font-display font-semibold text-white text-lg shrink-0">
+                {r.name.charAt(0)}
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-medium text-white text-sm">{r.name}</div>
+                <div class="text-xs text-surface-500">{r.suburb} · {r.date}</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 48 48" class="shrink-0 mt-0.5 opacity-80" aria-hidden="true">
+                <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+                <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+                <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+                <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+              </svg>
+            </header>
+            <div class="flex gap-0.5 mb-3 text-accent-500" aria-label={`Rated ${r.rating} out of 5 stars`}>
+              {Array.from({ length: r.rating }).map(() => (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+              ))}
+            </div>
+            <p class="text-surface-300 text-sm leading-relaxed flex-1">{r.quote}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 mt-10 text-center reveal">
+      <a
+        href="https://www.google.com/search?q=GNC+Financial+Bella+Vista+reviews"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 text-sm text-surface-300 hover:text-accent-400 transition-colors duration-150 underline underline-offset-4 decoration-surface-700 hover:decoration-accent-400"
+      >
+        Read all reviews on Google
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================
+       INSIGHTS — waveform timeline
+       Cards scroll horizontally; below them a ridge of
+       date-labelled lines responds to scroll position
+       (tallest at current viewport centre, shorter at edges).
+       ============================================ -->
+  <section class="ridge-timeline py-20 md:py-24 bg-surface-50 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.035] pointer-events-none" style="background-image: radial-gradient(circle, #0E0E0E 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 relative">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-10 reveal">
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-ink-800">Latest insights</h2>
+        <a href="/insights/" class="text-sm font-medium text-ink-800 hover:text-accent-700 underline underline-offset-4 decoration-ink-300 hover:decoration-accent-600 transition-colors duration-150">
+          View all &rarr;
+        </a>
+      </div>
+    </div>
+
+    <!-- Horizontal cards track -->
+    <div class="ridge-cards-viewport reveal" data-ridge-viewport>
+      <div class="ridge-cards" data-ridge-cards>
+        <!-- "Stay tuned" placeholder — sits to the left of the most recent post,
+             revealed when you swipe further left. Not a real card. -->
+        <div class="ridge-card-placeholder" aria-hidden="true">
+          <div class="placeholder-mark">
+            <span class="placeholder-pulse"></span>
+          </div>
+          <p class="placeholder-headline">Stay tuned for new insights</p>
+          <p class="placeholder-sub">Glenn publishes a new piece roughly every month. Check back soon.</p>
+        </div>
+
+        {insights.map((post, i) => (
+          <a
+            href={`/insights/${post.slug}/`}
+            class="ridge-card group"
+            data-ridge-card
+            data-ridge-index={i}
+          >
+            {i === 0 && (
+              <span class="ridge-card-latest" aria-label="Latest post">
+                <span class="ridge-card-latest-dot"></span>
+                Latest
+              </span>
+            )}
+            <span class="inline-block text-xs font-medium bg-accent-50 text-accent-950 rounded-full px-3 py-1 mb-3">{post.category}</span>
+            <h3 class="font-display text-lg font-medium text-ink-800 mb-2 group-hover:text-accent-700 transition-colors duration-150 leading-snug">
+              {post.title}
+            </h3>
+            <p class="text-sm text-ink-500 leading-relaxed line-clamp-3">{post.excerpt}</p>
+            <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-medium text-ink-800 group-hover:text-accent-700 transition-colors duration-150">
+              Read more
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- The mountain ridge — many short grey lines, dates below in their own row -->
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 mt-8">
+      <div class="ridge-rail" data-ridge-rail>
+        {ridgeBars.map((bar, i) => (
+          <span
+            class:list={["ridge-stem", bar.postIndex !== null && "is-anchor"]}
+            data-ridge-stem
+            data-ridge-index={i}
+            data-ridge-post={bar.postIndex !== null ? bar.postIndex : undefined}
+          >
+            <span class="ridge-bar"></span>
+          </span>
+        ))}
+      </div>
+      <!-- Separate row for date labels so they don't overlap the bars -->
+      <div class="ridge-labels-row" aria-hidden="true">
+        {ridgeBars.map((bar, i) => (
+          bar.date ? (
+            <span
+              class="ridge-label"
+              data-ridge-label-post={bar.postIndex}
+              style={`left: ${((i + 0.5) / ridgeBars.length) * 100}%;`}
+            >
+              {bar.date}
+            </span>
+          ) : null
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function initRidgeTimeline() {
+      const viewport = document.querySelector<HTMLElement>("[data-ridge-viewport]");
+      const cards = document.querySelector<HTMLElement>("[data-ridge-cards]");
+      const stems = Array.from(document.querySelectorAll<HTMLElement>("[data-ridge-stem]"));
+      const cardEls = Array.from(document.querySelectorAll<HTMLElement>("[data-ridge-card]"));
+      const labels = Array.from(document.querySelectorAll<HTMLElement>("[data-ridge-label-post]"));
+      if (!viewport || !cards || stems.length === 0) return;
+
+      // On first load, the placeholder sits left of the newest post.
+      // Snap the viewport so the FIRST real card (the newest) is centred,
+      // leaving the placeholder hidden just off-screen to the left.
+      requestAnimationFrame(() => {
+        const firstReal = cardEls[0];
+        if (!firstReal) return;
+        const cardRect = firstReal.getBoundingClientRect();
+        const viewRect = viewport!.getBoundingClientRect();
+        viewport!.scrollLeft +=
+          (cardRect.left - viewRect.left) - (viewRect.width - cardRect.width) / 2;
+      });
+
+      const STRIDE = 10;
+      const anchorOffset = Math.floor(STRIDE / 2);
+
+      // Returns { closestIndex, peakStemIndex } from current viewport scroll position
+      function computeFocus() {
+        const viewportRect = viewport!.getBoundingClientRect();
+        const focusX = viewportRect.left + viewportRect.width / 2;
+
+        let closestIndex = 0;
+        let closestDist = Infinity;
+        cardEls.forEach((card, i) => {
+          const r = card.getBoundingClientRect();
+          const cx = r.left + r.width / 2;
+          const d = Math.abs(cx - focusX);
+          if (d < closestDist) {
+            closestDist = d;
+            closestIndex = i;
+          }
+        });
+
+        const closestRect = cardEls[closestIndex].getBoundingClientRect();
+        const closestCx = closestRect.left + closestRect.width / 2;
+        const sign = focusX > closestCx ? 1 : -1;
+        const neighbour = sign > 0 ? cardEls[closestIndex + 1] : cardEls[closestIndex - 1];
+        let frac = 0;
+        if (neighbour) {
+          const nRect = neighbour.getBoundingClientRect();
+          const nCx = nRect.left + nRect.width / 2;
+          const span = Math.abs(nCx - closestCx);
+          if (span > 0) frac = sign * (Math.abs(focusX - closestCx) / span);
+        }
+        const continuousCardIndex = closestIndex + frac;
+        return {
+          closestIndex,
+          peak: continuousCardIndex * STRIDE + anchorOffset,
+        };
+      }
+
+      function update() {
+        const { closestIndex, peak } = computeFocus();
+
+        // Mountain tiers (named by mountaineering metaphor):
+        //   peak     — 1 tallest bar at the centre
+        //   shoulder — 2 bars flanking the peak (NEW, slightly below peak)
+        //   ridge    — 2 medium bars
+        //   outer    — 2 lower elevation bars
+        //   fade     — the long baseline
+        // 1 + 2 + 2 + 2 = 7 visible elevated bars in total.
+        stems.forEach((stem, i) => {
+          const dist = Math.abs(i - peak);
+          let h: number;
+          let o: number;
+          if (dist < 0.5)      { h = 1.0;  o = 0.95; } // peak
+          else if (dist < 1.5) { h = 0.78; o = 0.82; } // shoulder
+          else if (dist < 2.5) { h = 0.55; o = 0.65; } // ridge
+          else if (dist < 3.5) { h = 0.28; o = 0.42; } // outer
+          else                 { h = 0.1;  o = 0.18; } // fade
+          stem.style.setProperty("--ridge-h", `${h * 100}%`);
+          stem.style.setProperty("--ridge-o", `${o}`);
+        });
+
+        // Highlight the date label of the active card; dim the rest
+        labels.forEach((label) => {
+          const idx = parseInt(label.dataset.ridgeLabelPost || "-1", 10);
+          label.classList.toggle("is-active", idx === closestIndex);
+        });
+
+        // Active card itself gets a subtle highlight
+        cardEls.forEach((card, i) => {
+          card.classList.toggle("is-active", i === closestIndex);
+        });
+      }
+
+      viewport.addEventListener("scroll", () => requestAnimationFrame(update), { passive: true });
+      window.addEventListener("resize", update);
+      requestAnimationFrame(update);
+
+      // Click a labelled anchor → scroll its card into focus
+      stems.forEach((stem) => {
+        const postAttr = stem.getAttribute("data-ridge-post");
+        if (postAttr === null) return;
+        stem.style.cursor = "pointer";
+        stem.addEventListener("click", () => {
+          const cardIdx = parseInt(postAttr, 10);
+          scrollCardIntoFocus(cardIdx);
+        });
+      });
+
+      // Click a date label → scroll its card into focus
+      labels.forEach((label) => {
+        label.style.cursor = "pointer";
+        label.style.pointerEvents = "auto";
+        label.addEventListener("click", () => {
+          const cardIdx = parseInt(label.dataset.ridgeLabelPost || "0", 10);
+          scrollCardIntoFocus(cardIdx);
+        });
+      });
+
+      function scrollCardIntoFocus(cardIdx: number) {
+        const card = cardEls[cardIdx];
+        if (!card) return;
+        const cardRect = card.getBoundingClientRect();
+        const viewRect = viewport!.getBoundingClientRect();
+        const targetScroll =
+          viewport!.scrollLeft + (cardRect.left - viewRect.left) - (viewRect.width - cardRect.width) / 2;
+        viewport!.scrollTo({ left: targetScroll, behavior: "smooth" });
+      }
+
+      // ===== Click-and-drag scrolling on the cards row =====
+      let isDown = false;
+      let startX = 0;
+      let startScroll = 0;
+      let dragMoved = false;
+
+      viewport.addEventListener("pointerdown", (e: PointerEvent) => {
+        if (e.button !== 0) return;
+        isDown = true;
+        dragMoved = false;
+        startX = e.clientX;
+        startScroll = viewport!.scrollLeft;
+        viewport!.classList.add("is-grabbing");
+        viewport!.setPointerCapture(e.pointerId);
+      });
+
+      viewport.addEventListener("pointermove", (e: PointerEvent) => {
+        if (!isDown) return;
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) > 4) dragMoved = true;
+        viewport!.scrollLeft = startScroll - dx;
+      });
+
+      function endDrag(e: PointerEvent) {
+        if (!isDown) return;
+        isDown = false;
+        viewport!.classList.remove("is-grabbing");
+        try { viewport!.releasePointerCapture(e.pointerId); } catch {}
+      }
+      viewport.addEventListener("pointerup", endDrag);
+      viewport.addEventListener("pointercancel", endDrag);
+
+      cardEls.forEach((card) => {
+        card.addEventListener("click", (e) => {
+          if (dragMoved) e.preventDefault();
+        });
+      });
+
+      // ===== Click-and-drag scrubbing on the ridge rail =====
+      // Dragging the rail moves the cards viewport proportionally — like a
+      // video scrubber: full rail width = full card scroll range.
+      const rail = document.querySelector<HTMLElement>("[data-ridge-rail]");
+      if (rail) {
+        let railDown = false;
+        let railStartX = 0;
+        let railStartScroll = 0;
+        let railRatio = 1;
+
+        function maxViewportScroll() {
+          return viewport!.scrollWidth - viewport!.clientWidth;
+        }
+
+        rail.addEventListener("pointerdown", (e: PointerEvent) => {
+          if (e.button !== 0) return;
+          railDown = true;
+          railStartX = e.clientX;
+          railStartScroll = viewport!.scrollLeft;
+          // Map: dragging the full rail width should cover the full scroll range
+          const railWidth = rail.clientWidth;
+          railRatio = railWidth > 0 ? maxViewportScroll() / railWidth : 1;
+          rail.classList.add("is-scrubbing");
+          rail.setPointerCapture(e.pointerId);
+          // Prevent native drag (text selection etc.)
+          e.preventDefault();
+        });
+
+        rail.addEventListener("pointermove", (e: PointerEvent) => {
+          if (!railDown) return;
+          const dx = e.clientX - railStartX;
+          viewport!.scrollLeft = railStartScroll + dx * railRatio;
+        });
+
+        function endRailDrag(e: PointerEvent) {
+          if (!railDown) return;
+          railDown = false;
+          rail!.classList.remove("is-scrubbing");
+          try { rail!.releasePointerCapture(e.pointerId); } catch {}
+        }
+        rail.addEventListener("pointerup", endRailDrag);
+        rail.addEventListener("pointercancel", endRailDrag);
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initRidgeTimeline);
+    } else {
+      initRidgeTimeline();
+    }
+    document.addEventListener("astro:page-load", initRidgeTimeline);
+  </script>
+
+  <!-- ============================================
+       CONTACT STRIP — warm surface bg
+       ============================================ -->
+  <section class="py-20 md:py-28 bg-surface-200">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="reveal">
+          <h2 class="font-display text-3xl md:text-4xl font-semibold text-ink-800 mb-4">Get in touch</h2>
+          <p class="text-ink-500 mb-8 max-w-md">
+            Drop in, call, or send us a message. We're in Bella Vista and we work with clients right across Sydney and online Australia-wide.
+          </p>
+          <address class="not-italic space-y-4 text-sm text-ink-700">
+            <p>
+              <strong>Address</strong><br />
+              Suite 111, 33 Lexington Drive<br />
+              East Block, Level 1, Bella Vista NSW 2153
+            </p>
+            <p>
+              <strong>Phone</strong><br />
+              <a href="tel:0284032770" class="hover:text-accent-600 transition-colors">02 8403 2770</a><br />
+              <a href="tel:0288606520" class="hover:text-accent-600 transition-colors">02 8860 6520</a>
+            </p>
+            <p>
+              <strong>Email</strong><br />
+              <a href="mailto:admin@gncfinancial.com.au" class="hover:text-accent-600 transition-colors">admin@gncfinancial.com.au</a>
+            </p>
+          </address>
+        </div>
+        <div class="rounded-2xl overflow-hidden h-64 lg:h-auto min-h-[300px] reveal shadow-xl">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3314.776!2d150.9508!3d-33.7306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12a0347b1e5c8d%3A0x0!2s33+Lexington+Dr%2C+Bella+Vista+NSW+2153!5e0!3m2!1sen!2sau!4v1"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="GNC Financial office location — 33 Lexington Drive, Bella Vista"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       BOTTOM CTA
+       ============================================ -->
+  <section class="hero-gradient py-24 md:py-32 text-center">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="reveal">
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-white mb-4">Ready to get your numbers sorted?</h2>
+        <p class="text-surface-400 mb-10 max-w-md mx-auto">Book a free, no-obligation consult with Glenn and the team.</p>
+        <a
+          id="line-target"
+          href="/contact/"
+          class="btn-magnetic inline-flex items-center bg-accent-600 hover:bg-accent-500 active:bg-accent-700 text-white font-medium py-3.5 px-8 rounded-lg transition-all duration-200 text-sm shadow-lg shadow-accent-600/25"
+        >
+          Book a free consult
+        </a>
+      </div>
+    </div>
+  </section>
+  </div>
+  <!-- =====  SCROLL-LINE WRAPPER END  ===== -->
+</Page>
+
+<!-- Animations handled by shared Animations.astro component -->

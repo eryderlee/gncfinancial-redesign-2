@@ -1,0 +1,157 @@
+---
+import Page from '../layouts/Page.astro';
+---
+
+<Page
+  title="About"
+  description="Meet Glenn Campbell, principal accountant at GNC Financial. Over 30 years helping Hills District businesses and families with practical, plain-English accounting advice."
+>
+  <!-- ============================================
+       HERO — Animated mesh gradient, dark bg
+       ============================================ -->
+  <section class="hero-gradient min-h-[50vh] flex items-center pt-16 pb-12 md:pt-24 md:pb-16">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 w-full">
+      <div class="max-w-2xl">
+        <h1 class="font-display text-4xl md:text-5xl font-semibold text-white mb-4 hero-title">About GNC Financial</h1>
+        <p class="text-lg text-surface-400 max-w-lg hero-subtitle">
+          A local practice built on doing things properly — and explaining them plainly.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FOUNDER NOTE — light bg with dot grid
+       ============================================ -->
+  <section class="py-20 md:py-24 bg-surface-50 relative overflow-hidden">
+    <!-- Subtle dot grid -->
+    <div class="absolute inset-0 opacity-[0.035] pointer-events-none" style="background-image: radial-gradient(circle, #0E0E0E 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 relative">
+      <div class="max-w-[65ch] mx-auto reveal">
+        <h2 class="font-display text-2xl md:text-3xl font-semibold text-ink-800 mb-6">A note from Glenn</h2>
+        <div class="prose text-ink-700 space-y-4 leading-relaxed">
+          <p>
+            I started GNC Financial because I believed accounting shouldn't feel like a foreign language. After more than 30 years in the industry, that belief hasn't changed — if anything, it's gotten stronger.
+          </p>
+          <p>
+            Most of my clients are small business owners, tradies, and families right here in the Hills District. They don't need a fancy boardroom presentation. They need someone who'll answer the phone, explain what the numbers mean, and help them make better decisions with their money.
+          </p>
+          <p>
+            That's what we do. We keep it straightforward, we stay proactive, and we treat every client's business like it matters — because it does.
+          </p>
+          <p class="text-ink-500 text-sm italic">
+            — Glenn Campbell, Principal Accountant
+            <!-- TODO: Confirm exact post-nominals (e.g. MIPA/FIPA, CA/CPA) before launch -->
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       HOW WE WORK — cards with hover effects
+       ============================================ -->
+  <section class="py-20 md:py-24 bg-surface-200">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <h2 class="font-display text-3xl md:text-4xl font-semibold text-ink-800 mb-12 text-center reveal">How we work</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="group bg-surface-50 border border-surface-300 rounded-2xl p-7 md:p-9 card-hover reveal stagger-1">
+          <div class="text-center md:text-left">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-50 text-accent-600 group-hover:bg-accent-600 group-hover:text-white transition-colors duration-200 font-display text-xl font-semibold mb-4">1</div>
+            <h3 class="font-display text-xl font-medium text-ink-800 mb-2">Local</h3>
+            <p class="text-sm text-ink-500 leading-relaxed">
+              Based in Bella Vista, serving the Hills District and greater Sydney. We're not a call centre — you'll deal with real people who know the area and understand local business.
+            </p>
+          </div>
+        </div>
+        <div class="group bg-surface-50 border border-surface-300 rounded-2xl p-7 md:p-9 card-hover reveal stagger-2">
+          <div class="text-center md:text-left">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-50 text-accent-600 group-hover:bg-accent-600 group-hover:text-white transition-colors duration-200 font-display text-xl font-semibold mb-4">2</div>
+            <h3 class="font-display text-xl font-medium text-ink-800 mb-2">Proactive</h3>
+            <p class="text-sm text-ink-500 leading-relaxed">
+              We don't wait for you to call us at tax time. We reach out with reminders, flag opportunities, and keep you ahead of deadlines — not scrambling to catch up.
+            </p>
+          </div>
+        </div>
+        <div class="group bg-surface-50 border border-surface-300 rounded-2xl p-7 md:p-9 card-hover reveal stagger-3">
+          <div class="text-center md:text-left">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent-50 text-accent-600 group-hover:bg-accent-600 group-hover:text-white transition-colors duration-200 font-display text-xl font-semibold mb-4">3</div>
+            <h3 class="font-display text-xl font-medium text-ink-800 mb-2">Plain-English</h3>
+            <p class="text-sm text-ink-500 leading-relaxed">
+              No jargon, no waffle. We explain what matters, what it means for your pocket, and what to do next. If something doesn't make sense, ask — we'll explain it again.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       CREDENTIALS — dark section
+       ============================================ -->
+  <section class="py-20 md:py-24 bg-ink-950">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 text-center">
+      <h2 class="font-display text-3xl md:text-4xl font-semibold text-white mb-12 reveal">Credentials & partnerships</h2>
+      <div class="flex flex-wrap justify-center gap-8 md:gap-12 reveal">
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">IPA</div>
+          <span class="text-xs text-surface-500">Institute of Public<br />Accountants Member</span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">BAS</div>
+          <span class="text-xs text-surface-500">Registered<br />BAS Agent</span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">Xero</div>
+          <span class="text-xs text-surface-500">Xero Certified<br /><!-- TODO: Verify partner tier --></span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">MYOB</div>
+          <span class="text-xs text-surface-500">MYOB Partner<br /><!-- TODO: Verify partner tier --></span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">QBO</div>
+          <span class="text-xs text-surface-500">QuickBooks Online<br /><!-- TODO: Verify partner tier --></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       MAP + ADDRESS
+       ============================================ -->
+  <section class="py-20 md:py-24 bg-surface-200">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center reveal">
+        <div>
+          <h2 class="font-display text-2xl md:text-3xl font-semibold text-ink-800 mb-4">Come and see us</h2>
+          <address class="not-italic text-ink-600 space-y-2 mb-6">
+            <p>Suite 111, 33 Lexington Drive</p>
+            <p>East Block, Level 1</p>
+            <p>Bella Vista NSW 2153</p>
+          </address>
+          <a
+            href="/contact/"
+            class="inline-flex items-center text-sm font-medium text-ink-800 hover:text-accent-700 underline underline-offset-4 decoration-ink-300 hover:decoration-accent-600 transition-colors duration-150"
+          >
+            Get in touch &rarr;
+          </a>
+        </div>
+        <div class="rounded-2xl shadow-xl overflow-hidden h-64 lg:h-80">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3314.776!2d150.9508!3d-33.7306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12a0347b1e5c8d%3A0x0!2s33+Lexington+Dr%2C+Bella+Vista+NSW+2153!5e0!3m2!1sen!2sau!4v1"
+            width="100%"
+            height="100%"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="GNC Financial office location"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</Page>
+
+<!-- Animations handled by shared Animations.astro component -->

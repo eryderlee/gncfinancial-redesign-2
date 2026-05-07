@@ -1,0 +1,117 @@
+---
+import Page from '../../layouts/Page.astro';
+
+const posts = [
+  {
+    title: 'Tax Time 2025: What Every Small Business Owner Needs to Know',
+    slug: 'tax-time-2025-small-business',
+    category: 'Tax',
+    date: '2025-06-01',
+    excerpt: 'Key deadlines, new deductions, and common mistakes to avoid this financial year. A practical checklist for Hills District business owners.',
+  },
+  {
+    title: 'Xero vs MYOB vs QuickBooks: Which Is Right for Your Business?',
+    slug: 'xero-vs-myob-vs-quickbooks',
+    category: 'Bookkeeping',
+    date: '2025-04-15',
+    excerpt: 'We break down the three biggest cloud accounting platforms to help you pick the one that fits your workflow and budget.',
+  },
+  {
+    title: 'Do You Actually Need an Accountant for Your Investment Property?',
+    slug: 'accountant-for-investment-property',
+    category: 'Property',
+    date: '2025-03-10',
+    excerpt: "Negative gearing, depreciation schedules, CGT — here's when DIY stops making sense and professional help pays for itself.",
+  },
+  {
+    title: 'Crypto Tax in Australia: What the ATO Expects in 2025',
+    slug: 'crypto-tax-australia-2025',
+    category: 'Tax',
+    date: '2025-02-20',
+    excerpt: "The ATO is watching crypto closely. Here's what you need to report, how CGT applies, and the records you should be keeping.",
+  },
+  {
+    title: 'Setting Up Your First SMSF: Is It Worth It?',
+    slug: 'setting-up-first-smsf',
+    category: 'SMSF',
+    date: '2025-01-15',
+    excerpt: "Self-managed super funds offer control and flexibility — but they're not for everyone. We outline the costs, compliance, and who benefits most.",
+  },
+  {
+    title: 'ABN, ACN, TFN — What Do You Actually Need?',
+    slug: 'abn-acn-tfn-explained',
+    category: 'Business',
+    date: '2024-11-08',
+    excerpt: "Starting a business? Here's a plain-English guide to the registrations you need (and the ones you probably don't).",
+  },
+  {
+    title: 'BAS Lodgment: Quarterly vs Monthly — Which Is Better?',
+    slug: 'bas-quarterly-vs-monthly',
+    category: 'BAS',
+    date: '2024-09-22',
+    excerpt: 'The answer depends on your turnover and cash flow. We break down the pros and cons so you can choose with confidence.',
+  },
+  {
+    title: 'Five Tax Deductions Hills District Tradies Often Miss',
+    slug: 'tax-deductions-tradies',
+    category: 'Tax',
+    date: '2024-08-05',
+    excerpt: "Tools, travel, training, and more — if you're a tradie, make sure you're not leaving money on the table at tax time.",
+  },
+];
+---
+
+<Page
+  title="Insights"
+  description="Practical tax tips, accounting advice, and business insights from GNC Financial — written in plain English for Hills District businesses and individuals."
+>
+  <!-- ============================================
+       HERO — Dark gradient
+       ============================================ -->
+  <section class="hero-gradient pt-20 pb-16 md:pt-28 md:pb-20">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="max-w-2xl">
+        <h1 class="font-display text-4xl md:text-5xl font-semibold text-white mb-4 hero-title">Insights</h1>
+        <p class="text-lg text-surface-400 max-w-lg hero-subtitle">
+          Practical advice on tax, business, and money — no jargon, no fluff.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       POSTS GRID
+       ============================================ -->
+  <section class="py-20 md:py-28 bg-surface-50 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.035] pointer-events-none" style="background-image: radial-gradient(circle, #0E0E0E 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 relative">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        {posts.map((post, i) => (
+          <a
+            href={`/insights/${post.slug}/`}
+            class:list={[
+              "group block bg-surface-50 border border-surface-300 rounded-2xl p-7 md:p-8 card-hover reveal",
+              `stagger-${(i % 3) + 1}`,
+            ]}
+          >
+            <span class="inline-block text-xs font-medium bg-accent-50 text-accent-950 rounded-full px-3 py-1 mb-3">
+              {post.category}
+            </span>
+            <time class="block text-xs text-muted-500 mb-2" datetime={post.date}>
+              {new Date(post.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
+            </time>
+            <h2 class="font-display text-lg font-medium text-ink-800 mb-2 group-hover:text-accent-700 transition-colors duration-150 leading-snug">
+              {post.title}
+            </h2>
+            <p class="text-sm text-ink-500 leading-relaxed mb-4">{post.excerpt}</p>
+            <span class="text-sm font-medium text-ink-800 group-hover:text-accent-700 transition-colors duration-150">
+              Read more &rarr;
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Page>
+
+<!-- Animations handled by shared Animations.astro component -->

@@ -1,0 +1,24 @@
+---
+import Base from './Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StickyCTA from '../components/StickyCTA.astro';
+import Animations from '../components/Animations.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+}
+
+const { title, description, canonicalPath } = Astro.props;
+---
+
+<Base title={title} description={description} canonicalPath={canonicalPath}>
+  <slot name="head" slot="head" />
+  <Header slot="header" />
+  <slot />
+  <Footer slot="footer" />
+  <StickyCTA />
+  <Animations />
+</Base>

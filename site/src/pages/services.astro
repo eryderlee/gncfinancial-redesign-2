@@ -1,0 +1,427 @@
+---
+import Page from '../layouts/Page.astro';
+
+const industries = [
+  'Tradies', 'Professional Services', 'Retail & Hospitality', 'Tech & IT',
+  'Real Estate', 'Manufacturing', 'Healthcare', 'Transport & Logistics',
+];
+
+const faqs = [
+  {
+    q: 'How much does an accountant cost?',
+    a: 'It depends on the complexity of your situation. We offer a free initial consult so we can understand your needs and give you a clear quote upfront — no surprises.',
+  },
+  {
+    q: 'Do I need an accountant for my tax return?',
+    a: "If you have a simple return with just salary income, you might manage on your own. But if you have an investment property, run a business, have crypto, or want to make sure you're claiming everything you can — an accountant will almost always save you more than they cost.",
+  },
+  {
+    q: "What's the difference between a BAS agent and an accountant?",
+    a: 'A BAS agent is registered with the Tax Practitioners Board specifically to handle BAS and GST lodgments. Many accountants are also registered BAS agents (like us), so you get both services under one roof.',
+  },
+  {
+    q: 'Can you help me set up a company or trust?',
+    a: "Yes. We handle company registrations, trust deeds, ABN/TFN applications, and ongoing ASIC compliance. We'll help you choose the right structure for your situation.",
+  },
+  {
+    q: 'Do you work with clients outside the Hills District?',
+    a: "Absolutely. While we're based in Bella Vista and most of our clients are local, we work with businesses and individuals across Sydney and online Australia-wide.",
+  },
+  {
+    q: 'What bookkeeping software do you use?',
+    a: "We're certified across Xero, MYOB, and QuickBooks Online. We'll recommend the best fit for your business, or work with whatever you're already using.",
+  },
+  {
+    q: 'How often should I meet with my accountant?',
+    a: 'At minimum, once a year at tax time. But for business owners, we recommend quarterly check-ins so we can review your BAS, catch any issues early, and plan ahead.',
+  },
+  {
+    q: 'Can you help with overdue tax returns or ATO debt?',
+    a: 'Yes. We regularly help clients catch up on overdue returns and negotiate payment plans with the ATO. No judgement — we just get it sorted.',
+  },
+  {
+    q: 'What do I need to bring to my first appointment?',
+    a: "For individuals: your income summary (payment summaries, bank statements), receipts for deductions, and details of any investments or property. For businesses: your most recent financial statements, BAS history, and access to your accounting software. Don't worry if you're not sure — we'll walk you through it.",
+  },
+];
+
+const taxDeadlines = [
+  { date: 'Jun 30', label: 'EOFY' },
+  { date: 'Jul 14', label: 'PAYG summary' },
+  { date: 'Oct 31', label: 'Self-lodge cutoff' },
+  { date: 'May 15', label: 'Tax-agent extension' },
+];
+
+const advisorySteps = [
+  { num: '1', title: 'Audit', detail: 'We dig into your numbers, structure, and goals.' },
+  { num: '2', title: 'Plan', detail: 'A roadmap with priorities and quick wins.' },
+  { num: '3', title: 'Implement', detail: 'We do the heavy lifting — you stay focused.' },
+  { num: '4', title: 'Review', detail: 'Quarterly check-ins to keep things on track.' },
+];
+
+const specialistAreas = [
+  { title: 'SMSF compliance', detail: 'Annual returns, audit coordination, member contributions tracked.' },
+  { title: 'Crypto tax', detail: 'CGT events on every wallet and exchange, reported correctly.' },
+  { title: 'Investment property', detail: 'Negative gearing, depreciation schedules, rental income strategy.' },
+  { title: 'Estate planning', detail: 'Structures and advice that protect what you’ve built for the next generation.' },
+];
+
+const tocItems = [
+  { id: 'tax', n: '01', label: 'Tax' },
+  { id: 'business-accounting', n: '02', label: 'Business Accounting' },
+  { id: 'bookkeeping', n: '03', label: 'Bookkeeping' },
+  { id: 'advisory', n: '04', label: 'Business Advisory' },
+  { id: 'smsf-specialist', n: '05', label: 'SMSF & Specialist' },
+];
+---
+
+<Page
+  title="Services"
+  description="Tax returns, business accounting, bookkeeping, advisory, and SMSF services from GNC Financial — Hills District accountants serving Sydney and Australia-wide."
+>
+  <!-- ============================================
+       HERO
+       ============================================ -->
+  <section class="hero-gradient pt-20 pb-16 md:pt-28 md:pb-20">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="max-w-2xl">
+        <h1 class="font-display text-4xl md:text-5xl lg:text-[3.75rem] font-semibold text-white leading-[1.08] mb-5 hero-title">Our services</h1>
+        <p class="text-lg text-surface-400 max-w-lg hero-subtitle">
+          Five focuses, one team. Built for individuals, families and growing businesses across the Hills&nbsp;District.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SERVICES BODY — TOC + sections
+       ============================================ -->
+  <div class="services-body relative">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="lg:grid lg:grid-cols-[180px_1fr] lg:gap-16">
+
+        <!-- Sticky TOC sidebar (desktop) -->
+        <aside class="hidden lg:block">
+          <nav class="services-toc sticky top-28 py-20" aria-label="Service sections">
+            <p class="text-xs uppercase tracking-[0.18em] text-muted-500 mb-4">On this page</p>
+            <ul class="space-y-3">
+              {tocItems.map(({ id, n, label }) => (
+                <li>
+                  <a
+                    href={`#${id}`}
+                    class="services-toc-link group flex items-baseline gap-3 text-sm text-ink-500 hover:text-ink-900 transition-colors"
+                    data-toc-target={id}
+                  >
+                    <span class="font-mono text-xs text-muted-400 group-hover:text-accent-600 transition-colors">{n}</span>
+                    <span>{label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
+        <!-- Sections column -->
+        <div class="services-column">
+
+          <!-- ===== 01 · TAX — split layout w/ deadline rail ===== -->
+          <section id="tax" class="service-block scroll-mt-28 py-16 md:py-24 reveal">
+            <div class="service-num">01</div>
+            <h2 class="service-title font-display text-3xl md:text-5xl font-semibold text-ink-800 mb-5">Tax</h2>
+            <p class="text-ink-600 mb-10 leading-relaxed max-w-[60ch]">
+              From straightforward individual returns to complex business structures, we make sure you're claiming everything you're entitled to — and lodging on time.
+            </p>
+
+            <div class="grid md:grid-cols-2 gap-10 items-start">
+              <ul class="space-y-3 text-ink-700 text-sm md:text-base">
+                <li class="flex items-start gap-3"><span class="service-bullet"></span>Individual tax returns</li>
+                <li class="flex items-start gap-3"><span class="service-bullet"></span>Business returns (sole trader, partnership, company, trust)</li>
+                <li class="flex items-start gap-3"><span class="service-bullet"></span>Tax planning &amp; minimisation strategies</li>
+                <li class="flex items-start gap-3"><span class="service-bullet"></span>Capital gains tax advice</li>
+                <li class="flex items-start gap-3"><span class="service-bullet"></span>Investment property tax</li>
+                <li class="flex items-start gap-3"><span class="service-bullet"></span>Crypto tax reporting</li>
+              </ul>
+
+              <!-- Deadline rail visual -->
+              <aside class="bg-surface-50 border border-surface-300 rounded-2xl p-6 md:p-7">
+                <p class="text-xs uppercase tracking-[0.18em] text-muted-500 mb-5 flex items-center gap-2">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  Tax-year cadence
+                </p>
+                <ul class="space-y-4">
+                  {taxDeadlines.map((d) => (
+                    <li class="flex items-baseline gap-4 border-b border-surface-300 last:border-0 pb-3 last:pb-0">
+                      <span class="font-mono text-xs text-accent-700 w-16 shrink-0">{d.date}</span>
+                      <span class="text-sm text-ink-700">{d.label}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p class="text-xs text-muted-500 mt-5 leading-relaxed">
+                  We track every cutoff so you don't have to.
+                </p>
+              </aside>
+            </div>
+
+            <p class="service-outcome">
+              <span class="service-outcome-tag">Outcome</span>
+              You keep more of what you earn, with zero stress at tax time.
+            </p>
+          </section>
+
+          <hr class="service-divider" />
+
+          <!-- ===== 02 · BUSINESS ACCOUNTING — stat-led ===== -->
+          <section id="business-accounting" class="service-block scroll-mt-28 py-16 md:py-24 reveal">
+            <div class="service-num">02</div>
+            <h2 class="service-title font-display text-3xl md:text-5xl font-semibold text-ink-800 mb-5">Business Accounting</h2>
+            <p class="text-ink-600 mb-10 leading-relaxed max-w-[60ch]">
+              Clear financial statements, timely BAS lodgment, and ASIC compliance handled — so you can focus on running your business.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6 mb-10">
+              <div class="stat-callout">
+                <div class="font-display text-3xl md:text-4xl font-semibold text-ink-900 mb-1">100%</div>
+                <div class="text-xs uppercase tracking-wider text-muted-500">On-time lodgment rate</div>
+              </div>
+              <div class="stat-callout">
+                <div class="font-display text-3xl md:text-4xl font-semibold text-ink-900 mb-1">Quarterly</div>
+                <div class="text-xs uppercase tracking-wider text-muted-500">BAS reporting cadence</div>
+              </div>
+              <div class="stat-callout">
+                <div class="font-display text-3xl md:text-4xl font-semibold text-ink-900 mb-1">ASIC<span class="text-accent-600">·</span>ATO</div>
+                <div class="text-xs uppercase tracking-wider text-muted-500">Compliance covered</div>
+              </div>
+            </div>
+
+            <ul class="grid md:grid-cols-2 gap-x-6 gap-y-3 text-ink-700 text-sm md:text-base">
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Financial statements &amp; reporting</li>
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>BAS &amp; GST lodgment</li>
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Company secretarial &amp; ASIC compliance</li>
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Payroll</li>
+            </ul>
+
+            <p class="service-outcome">
+              <span class="service-outcome-tag">Outcome</span>
+              Your obligations are met, your numbers are accurate, and you always know where you stand.
+            </p>
+          </section>
+
+          <hr class="service-divider" />
+
+          <!-- ===== 03 · BOOKKEEPING — platform cards ===== -->
+          <section id="bookkeeping" class="service-block scroll-mt-28 py-16 md:py-24 reveal">
+            <div class="service-num">03</div>
+            <h2 class="service-title font-display text-3xl md:text-5xl font-semibold text-ink-800 mb-5">Bookkeeping</h2>
+            <p class="text-ink-600 mb-10 leading-relaxed max-w-[60ch]">
+              Day-to-day books in the platform that suits you. Reconciled, categorised, and report-ready.
+            </p>
+
+            <p class="text-xs uppercase tracking-[0.18em] text-muted-500 mb-4">Certified across</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+              <div class="platform-card">
+                <div class="platform-mark" style="background: #13B5EA;">X</div>
+                <div>
+                  <div class="font-medium text-ink-800">Xero</div>
+                  <div class="text-xs text-muted-500">Setup, migration, ongoing</div>
+                </div>
+              </div>
+              <div class="platform-card">
+                <div class="platform-mark" style="background: #6F2D8E;">M</div>
+                <div>
+                  <div class="font-medium text-ink-800">MYOB</div>
+                  <div class="text-xs text-muted-500">AccountRight, Business</div>
+                </div>
+              </div>
+              <div class="platform-card">
+                <div class="platform-mark" style="background: #2CA01C;">Q</div>
+                <div>
+                  <div class="font-medium text-ink-800">QuickBooks</div>
+                  <div class="text-xs text-muted-500">Online &amp; payroll add-on</div>
+                </div>
+              </div>
+            </div>
+
+            <ul class="space-y-3 text-ink-700 text-sm md:text-base">
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Bookkeeping setup &amp; cleanup on any of the above</li>
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Bank reconciliation</li>
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Accounts payable and receivable</li>
+            </ul>
+
+            <p class="service-outcome">
+              <span class="service-outcome-tag">Outcome</span>
+              Clean books, no backlog, and confidence that every dollar is accounted for.
+            </p>
+          </section>
+
+          <hr class="service-divider" />
+
+          <!-- ===== 04 · BUSINESS ADVISORY — process steps ===== -->
+          <section id="advisory" class="service-block scroll-mt-28 py-16 md:py-24 reveal">
+            <div class="service-num">04</div>
+            <h2 class="service-title font-display text-3xl md:text-5xl font-semibold text-ink-800 mb-5">Business Advisory</h2>
+            <p class="text-ink-600 mb-10 leading-relaxed max-w-[60ch]">
+              More than number-crunching. We help you make smarter decisions about structure, growth, and strategy — grounded in what the numbers actually say.
+            </p>
+
+            <ol class="advisory-steps grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+              {advisorySteps.map((s, i) => (
+                <li class="advisory-step">
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="advisory-step-num">{s.num}</span>
+                    {i < advisorySteps.length - 1 && <span class="advisory-step-line"></span>}
+                  </div>
+                  <div class="font-medium text-ink-800 mb-1">{s.title}</div>
+                  <div class="text-xs text-muted-500 leading-relaxed">{s.detail}</div>
+                </li>
+              ))}
+            </ol>
+
+            <ul class="grid md:grid-cols-2 gap-x-6 gap-y-3 text-ink-700 text-sm md:text-base">
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Business structure (company, trust, partnership)</li>
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Cash flow forecasting</li>
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Growth planning &amp; budgeting</li>
+              <li class="flex items-start gap-3"><span class="service-bullet"></span>Estate planning guidance</li>
+            </ul>
+
+            <p class="service-outcome">
+              <span class="service-outcome-tag">Outcome</span>
+              Clear-headed decisions backed by real financial data — not guesswork.
+            </p>
+          </section>
+
+          <hr class="service-divider" />
+
+          <!-- ===== 05 · SMSF & SPECIALIST — sub-service grid ===== -->
+          <section id="smsf-specialist" class="service-block scroll-mt-28 py-16 md:py-24 pb-24 reveal">
+            <div class="service-num">05</div>
+            <h2 class="service-title font-display text-3xl md:text-5xl font-semibold text-ink-800 mb-5">SMSF &amp; Specialist</h2>
+            <p class="text-ink-600 mb-10 leading-relaxed max-w-[60ch]">
+              Self-managed super, crypto, investment property, and estate planning — areas that need specialist knowledge and careful handling.
+            </p>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              {specialistAreas.map((a) => (
+                <article class="specialist-card group">
+                  <h3 class="font-display text-lg font-medium text-ink-800 mb-2 group-hover:text-accent-700 transition-colors">{a.title}</h3>
+                  <p class="text-sm text-ink-500 leading-relaxed">{a.detail}</p>
+                </article>
+              ))}
+            </div>
+
+            <p class="service-outcome">
+              <span class="service-outcome-tag">Outcome</span>
+              Specialist areas handled with care, so you stay compliant and make the most of your investments.
+            </p>
+          </section>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       INDUSTRIES — dark strip
+       ============================================ -->
+  <section class="py-16 md:py-20 bg-ink-950 relative overflow-hidden">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 text-center relative">
+      <div class="reveal">
+        <h2 class="font-display text-2xl md:text-3xl font-semibold text-white mb-8">Industries we work with</h2>
+        <div class="flex flex-wrap justify-center gap-3">
+          {industries.map((industry) => (
+            <span class="inline-block text-sm bg-ink-900 border border-ink-700 text-surface-300 rounded-full px-5 py-2">
+              {industry}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FAQ
+       ============================================ -->
+  <section class="py-20 md:py-24 bg-surface-50">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="reveal">
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-ink-800 mb-12 text-center">Frequently asked questions</h2>
+        <div class="max-w-[65ch] mx-auto space-y-1">
+          {faqs.map((faq) => (
+            <details class="group border-l-2 border-transparent hover:border-accent-600 transition-colors pl-4" name="faq">
+              <summary class="flex items-center justify-between cursor-pointer list-none text-ink-800 font-medium text-base md:text-lg leading-snug py-5">
+                <span class="pr-4">{faq.q}</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="shrink-0 text-muted-400 transition-transform duration-200 group-open:rotate-180"
+                >
+                  <path d="m6 9 6 6 6-6"/>
+                </svg>
+              </summary>
+              <p class="pb-5 text-sm text-ink-500 leading-relaxed pr-8">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       BOTTOM CTA
+       ============================================ -->
+  <section class="hero-gradient py-24 md:py-32 text-center">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="reveal">
+        <h2 class="font-display text-2xl md:text-3xl font-semibold text-white mb-4">Not sure what you need?</h2>
+        <p class="text-surface-400 mb-10 max-w-md mx-auto">Book a free consult and we'll point you in the right direction.</p>
+        <a
+          href="/contact/"
+          class="btn-magnetic inline-flex items-center bg-accent-600 hover:bg-accent-500 active:bg-accent-700 text-white font-medium py-3.5 px-8 rounded-lg transition-all duration-200 text-sm shadow-lg shadow-accent-600/25"
+        >
+          Book a free consult
+        </a>
+      </div>
+    </div>
+  </section>
+</Page>
+
+<!-- TOC scroll-spy -->
+<script>
+  function initServicesToc() {
+    const links = document.querySelectorAll<HTMLAnchorElement>(".services-toc-link[data-toc-target]");
+    if (!links.length) return;
+
+    const sections = Array.from(links)
+      .map((l) => document.getElementById(l.dataset.tocTarget || ""))
+      .filter((el): el is HTMLElement => !!el);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            links.forEach((link) => {
+              link.classList.toggle("is-active", link.dataset.tocTarget === id);
+            });
+          }
+        });
+      },
+      { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
+    );
+
+    sections.forEach((s) => observer.observe(s));
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initServicesToc);
+  } else {
+    initServicesToc();
+  }
+  document.addEventListener("astro:page-load", initServicesToc);
+</script>

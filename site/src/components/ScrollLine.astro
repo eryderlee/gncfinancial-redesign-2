@@ -1,0 +1,369 @@
+---
+// Scroll-drawn orange line.
+// Sits absolutely inside a `position: relative` parent, builds a curved SVG path
+// from the top of the parent down to the element with id="line-target", then
+// animates stroke-dashoffset on scroll so the line "draws itself" from the
+// credo dot down to the booking CTA.
+//
+// Vanilla JS — no GSAP — uses requestAnimationFrame + scroll listener.
+---
+
+<div class="scroll-line" data-scroll-line aria-hidden="true">
+  <!-- Two stacked SVGs sharing the same path geometry. The "dark" layer uses
+       multiply blending so it darkens light backgrounds; the "light" layer
+       uses plus-lighter so it glows on dark backgrounds. Each layer is only
+       visible on the bg type it's tuned for. -->
+  <svg class="scroll-line-svg scroll-line-dark" data-scroll-line-svg fill="none" overflow="visible">
+    <path
+      data-scroll-line-path
+      fill="none"
+      stroke="var(--color-accent-600)"
+      stroke-width="1.5"
+      stroke-linecap="round"
+    />
+  </svg>
+  <svg class="scroll-line-svg scroll-line-light" data-scroll-line-svg-light fill="none" overflow="visible">
+    <path
+      data-scroll-line-path-light
+      fill="none"
+      stroke="#E8801A"
+      stroke-width="1.6"
+      stroke-linecap="round"
+    />
+  </svg>
+</div>
+
+<style is:global>
+  .scroll-line-parent { position: relative; }
+
+  /* Line sits BEHIND any boxed content (cards, iframes, callouts) but on
+     top of the page background. Boxes get z-index: 2 below. */
+  .scroll-line {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+  }
+  .scroll-line.is-ready { opacity: 1; }
+
+  .scroll-line-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+  }
+  /* Dark layer: same multiply blend + opacity the original line had,
+     so on cream/light backgrounds it looks identical to before. */
+  .scroll-line-dark {
+    mix-blend-mode: multiply;
+    opacity: 0.55;
+  }
+  /* Light layer: `lighten` takes max(src, dest) per channel. The stroke
+     colour (#E8801A) sits BELOW cream's R/G/B in every channel, so on
+     light backgrounds the layer literally cannot push any pixel — it's
+     invisible. On near-black, every channel wins → clean orange line. */
+  .scroll-line-light {
+    mix-blend-mode: lighten;
+    opacity: 0.95;
+  }
+
+  /* Every direct content child of a section is lifted ABOVE the line, so the
+     line passes BEHIND text, the Google-reviews pill, and any other element
+     a section renders. The dot-grid / texture overlays use the .absolute
+     utility class — those are excluded so they stay below the line. */
+  .scroll-line-parent section > *:not(.absolute) {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Specific cards, iframes, and rails already get z-index: 2 above; this
+     keeps the existing rules working when an overlay sits inside a deeper
+     wrapper instead of being a direct child of <section>. */
+  .scroll-line-parent .ridge-card,
+  .scroll-line-parent .ridge-card-placeholder,
+  .scroll-line-parent .ridge-cards-viewport,
+  .scroll-line-parent .reviews-marquee,
+  .scroll-line-parent .review-card,
+  .scroll-line-parent .card-hover,
+  .scroll-line-parent .stat-callout,
+  .scroll-line-parent .platform-card,
+  .scroll-line-parent .specialist-card,
+  .scroll-line-parent .advisory-step,
+  .scroll-line-parent iframe,
+  .scroll-line-parent .ridge-rail,
+  .scroll-line-parent .ridge-labels-row {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* CTA arrival glow — fires when the line tip reaches the booking button */
+  #line-target {
+    position: relative;
+    z-index: 2;
+    transition: box-shadow 0.5s ease-out, transform 0.4s ease-out;
+  }
+  #line-target.cta-arrived {
+    box-shadow:
+      0 0 0 6px rgba(232, 128, 26, 0.18),
+      0 0 28px 6px rgba(232, 128, 26, 0.55),
+      0 10px 22px -4px rgba(232, 128, 26, 0.45);
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  /* Any direct wrapper that contains an iframe (e.g. the Google map card)
+     gets lifted above the line so the line passes behind it. */
+  .scroll-line-parent *:has(> iframe) {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-line { display: none; }
+  }
+</style>
+
+<script>
+  // Module-level cleanup so each call to initScrollLine() (e.g. on every
+  // astro:page-load) tears down the previous instance's listeners before
+  // wiring up new ones. Without this, listeners stack and each scroll event
+  // fires update() multiple times — the cause of the frame-by-frame jank.
+  let __slCleanup: (() => void) | null = null;
+
+  function initScrollLine() {
+    __slCleanup?.();
+
+    const wrapper = document.querySelector<HTMLElement>("[data-scroll-line]");
+    const svg = document.querySelector<SVGSVGElement>("[data-scroll-line-svg]");
+    const path = document.querySelector<SVGPathElement>("[data-scroll-line-path]");
+    if (!wrapper || !svg || !path) return;
+
+    let totalLength = 0;
+    let parent: HTMLElement | null = null;
+    let target: HTMLElement | null = null;
+    let source: HTMLElement | null = null;
+    let ctaReached = false;
+
+    function buildPath(startX: number, endX: number, h: number, amp: number): string {
+      // Two cubic bezier sweeps that snake from (startX, 0) down to (endX, h)
+      // within the SVG's local coordinate space.
+      const midX = (startX + endX) / 2;
+      const cp1x = startX - amp * 0.26;
+      const cp2x = startX - amp;
+      const mid = h * 0.5;
+      const peak2 = h * 0.75;
+      const scp1x = midX + amp * 0.5;
+      return (
+        `M ${startX} 0 ` +
+        `C ${cp1x} ${h * 0.13}, ${cp2x} ${h * 0.30}, ${midX} ${mid} ` +
+        `S ${scp1x} ${peak2}, ${endX} ${h}`
+      );
+    }
+
+    function setup() {
+      // Just bind references — all geometry is handled by update() so we
+      // never write a stale (uncompensated) position to the DOM that would
+      // flash on paint before update() runs.
+      parent = wrapper!.parentElement;
+      target = document.getElementById("line-target");
+      source = document.getElementById("line-source");
+    }
+
+    let lastH = 0;
+    let lastStartX = 0;
+    let lastEndX = 0;
+
+    // The credo block has a `.reveal` transition that uses translateY(32 → 0).
+    // getBoundingClientRect() includes that transform, so the dot's measured
+    // top is wrong while the animation is in progress. Compensate by reading
+    // the parent's current transform matrix and subtracting its Y offset —
+    // the result is the dot's RESTING position regardless of animation state.
+    function getTransformY(el: Element | null): { x: number; y: number } {
+      if (!el) return { x: 0, y: 0 };
+      const transform = getComputedStyle(el).transform;
+      if (!transform || transform === "none") return { x: 0, y: 0 };
+      try {
+        const m = new DOMMatrix(transform);
+        return { x: m.e, y: m.f };
+      } catch {
+        return { x: 0, y: 0 };
+      }
+    }
+
+    function update() {
+      if (!target || !wrapper) return;
+
+      const wRect = wrapper.getBoundingClientRect();
+      const tRect = target.getBoundingClientRect();
+      const sRect = source ? source.getBoundingClientRect() : null;
+
+      // Walk up from the dot to the wrapper, summing transform offsets so we
+      // can subtract any in-flight reveal animation translation.
+      let revealOffsetY = 0;
+      let revealOffsetX = 0;
+      let cur: Element | null = source;
+      while (cur && cur !== wrapper.parentElement && cur !== document.body) {
+        const t = getTransformY(cur);
+        revealOffsetX += t.x;
+        revealOffsetY += t.y;
+        cur = cur.parentElement;
+      }
+
+      const startTopWrap = sRect
+        ? sRect.top - wRect.top + sRect.height / 2 - revealOffsetY
+        : 0;
+      const startX = sRect
+        ? sRect.left - wRect.left + sRect.width / 2 - revealOffsetX
+        : wRect.width * 0.5;
+      // Land the tip right on the button's top edge — small negative so the
+      // tip overlaps the button by 1px and visually touches without a gap.
+      const endTopWrap = tRect.top - wRect.top + 1;
+      const endX = tRect.left + tRect.width / 2 - wRect.left;
+      const h = Math.max(0, endTopWrap - startTopWrap);
+      const svgW = wRect.width;
+
+      const lightSvg = document.querySelector<SVGSVGElement>("[data-scroll-line-svg-light]");
+      const lightPath = document.querySelector<SVGPathElement>("[data-scroll-line-path-light]");
+
+      // Always re-anchor SVG to the dot's current position
+      [svg, lightSvg].forEach((s) => {
+        if (!s) return;
+        s.setAttribute("width", String(svgW));
+        s.style.top = `${startTopWrap}px`;
+        s.style.height = `${h}px`;
+      });
+
+      // Rebuild path only when shape changes — getTotalLength is the slow part
+      const dimsChanged =
+        Math.abs(h - lastH) > 0.5 ||
+        Math.abs(startX - lastStartX) > 0.5 ||
+        Math.abs(endX - lastEndX) > 0.5;
+      if (dimsChanged) {
+        const amp = svgW * 0.4;
+        const d = buildPath(startX, endX, h, amp);
+        path!.setAttribute("d", d);
+        lightPath?.setAttribute("d", d);
+        totalLength = path!.getTotalLength();
+        [path, lightPath].forEach((p) => {
+          if (!p) return;
+          p.style.strokeDasharray = String(totalLength);
+        });
+        lastH = h;
+        lastStartX = startX;
+        lastEndX = endX;
+      }
+
+      if (totalLength === 0) return;
+
+      // Drawing window: starts when the dot enters at 80% of the viewport,
+      // ends when the booking button reaches 35% from the top — long enough
+      // that the user actually sees the tip "arrive".
+      const startThreshold = window.innerHeight * 0.8;
+      const endThreshold = window.innerHeight * 0.35;
+      const startViewportY = sRect ? sRect.top + sRect.height / 2 : wRect.top;
+      const lineHeight = Math.max(1, h);
+      const drawDistance = lineHeight + (startThreshold - endThreshold);
+      const raw = (startThreshold - startViewportY) / drawDistance;
+      const progress = Math.max(0, Math.min(1, raw));
+      const offset = totalLength * (1 - progress);
+
+      path!.style.strokeDashoffset = String(offset);
+      if (lightPath) lightPath.style.strokeDashoffset = String(offset);
+
+      const arrived = progress >= 0.985;
+      if (arrived && !ctaReached) {
+        ctaReached = true;
+        document.dispatchEvent(new CustomEvent("cta-line-reached"));
+      } else if (!arrived && ctaReached) {
+        ctaReached = false;
+        document.dispatchEvent(new CustomEvent("cta-line-left"));
+      }
+    }
+
+    function bind() {
+      setup();
+      update();
+      wrapper!.classList.add("is-ready");
+
+      // update() now reanchors the SVG to the dot's current position every
+      // frame — but it only runs on scroll events. We need it to also run
+      // when layout settles after font loads / reveal animations.
+      const resettle = () => update();
+
+      if ((document as any).fonts?.ready) {
+        (document as any).fonts.ready.then(resettle);
+      }
+
+      const credo = document.querySelector<HTMLElement>(".credo-block");
+      const onTransitionEnd = (e: TransitionEvent) => {
+        if (e.propertyName === "transform" || e.propertyName === "opacity") {
+          resettle();
+        }
+      };
+      credo?.addEventListener("transitionend", onTransitionEnd);
+
+      // Belt-and-suspenders timeouts — catch any layout shift that the
+      // events above missed (slow fonts, animation-after-IO timing, etc.).
+      const timeouts = [200, 600, 1200, 2400, 4000].map((ms) =>
+        window.setTimeout(resettle, ms)
+      );
+
+      // Reflow watcher: anything that changes the credo's box → resettle.
+      let credoObserver: ResizeObserver | null = null;
+      if (credo && "ResizeObserver" in window) {
+        credoObserver = new ResizeObserver(resettle);
+        credoObserver.observe(credo);
+      }
+      // Same for the page body — catches late-loading content above the line.
+      let bodyObserver: ResizeObserver | null = null;
+      if ("ResizeObserver" in window) {
+        bodyObserver = new ResizeObserver(resettle);
+        bodyObserver.observe(document.body);
+      }
+
+      // Single RAF gate so multiple scroll events in one frame collapse to
+      // one update() call. Prevents stuttering / frame-by-frame draws.
+      let rafScheduled = false;
+      const onScroll = () => {
+        if (rafScheduled) return;
+        rafScheduled = true;
+        requestAnimationFrame(() => {
+          rafScheduled = false;
+          update();
+        });
+      };
+      const onResize = () => {
+        setup();
+        update();
+      };
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onResize);
+
+      __slCleanup = () => {
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onResize);
+        credo?.removeEventListener("transitionend", onTransitionEnd);
+        credoObserver?.disconnect();
+        bodyObserver?.disconnect();
+        timeouts.forEach((id) => window.clearTimeout(id));
+        wrapper?.classList.remove("is-ready");
+      };
+    }
+
+    // Wait for layout (especially fonts + images that affect heights) before measuring
+    if (document.readyState === "complete") {
+      requestAnimationFrame(bind);
+    } else {
+      window.addEventListener("load", () => requestAnimationFrame(bind), { once: true });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initScrollLine);
+  } else {
+    initScrollLine();
+  }
+  document.addEventListener("astro:page-load", initScrollLine);
+</script>

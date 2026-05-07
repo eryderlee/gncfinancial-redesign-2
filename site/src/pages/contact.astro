@@ -1,0 +1,131 @@
+---
+import Page from '../layouts/Page.astro';
+import ContactForm from '../components/ContactForm.astro';
+---
+
+<Page
+  title="Contact"
+  description="Get in touch with GNC Financial — call, email, or book a free consult. Suite 111, 33 Lexington Drive, Bella Vista NSW 2153."
+>
+  <!-- JSON-LD -->
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://gncfinancial.com.au/#business",
+    "name": "GNC Financial",
+    "image": "https://gncfinancial.com.au/logo.png",
+    "url": "https://gncfinancial.com.au",
+    "telephone": ["+61284032770", "+61288606520"],
+    "email": "admin@gncfinancial.com.au",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Suite 111, 33 Lexington Drive, East Block, Level 1",
+      "addressLocality": "Bella Vista",
+      "addressRegion": "NSW",
+      "postalCode": "2153",
+      "addressCountry": "AU"
+    },
+    "areaServed": [
+      "Baulkham Hills", "Castle Hill", "Bella Vista", "Winston Hills",
+      "Kellyville", "Rouse Hill", "Norwest", "Seven Hills", "Parramatta",
+      "Hills District", "Blacktown", "South West Sydney"
+    ],
+    "priceRange": "$$",
+    "description": "Local accountants in the Hills District offering tax returns, business accounting, bookkeeping, and advisory services.",
+    "sameAs": [
+      "https://www.instagram.com/gncfinancial/",
+      "https://www.facebook.com/profile.php?id=61568291158118",
+      "https://www.linkedin.com/company/www.gncfinancial.com.au/"
+    ]
+  })} />
+
+  <!-- ============================================
+       HERO — Dark gradient
+       ============================================ -->
+  <section class="hero-gradient pt-20 pb-16 md:pt-28 md:pb-20">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="max-w-2xl">
+        <h1 class="font-display text-4xl md:text-5xl font-semibold text-white mb-4 hero-title">Contact us</h1>
+        <p class="text-lg text-surface-400 max-w-lg hero-subtitle">
+          Drop us a line, give us a call, or book a free consult. We're here to help.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       FORM + DETAILS
+       ============================================ -->
+  <section class="py-20 md:py-28 bg-surface-50 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.035] pointer-events-none" style="background-image: radial-gradient(circle, #0E0E0E 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10 relative">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        <!-- Form -->
+        <div class="reveal">
+          <h2 class="font-display text-2xl font-semibold text-ink-800 mb-6">Send a message</h2>
+          <ContactForm />
+        </div>
+
+        <!-- Contact details -->
+        <div class="reveal">
+          <h2 class="font-display text-2xl font-semibold text-ink-800 mb-6">Details</h2>
+          <address class="not-italic space-y-6 text-ink-700">
+            <div class="bg-surface-50 border border-surface-300 rounded-2xl p-6">
+              <h3 class="text-sm font-medium text-ink-800 mb-1">Address</h3>
+              <p class="text-sm">
+                Suite 111, 33 Lexington Drive<br />
+                East Block, Level 1<br />
+                Bella Vista NSW 2153
+              </p>
+            </div>
+            <div class="bg-surface-50 border border-surface-300 rounded-2xl p-6">
+              <h3 class="text-sm font-medium text-ink-800 mb-1">Phone</h3>
+              <p class="text-sm">
+                <a href="tel:0284032770" class="hover:text-accent-600 transition-colors">02 8403 2770</a><br />
+                <a href="tel:0288606520" class="hover:text-accent-600 transition-colors">02 8860 6520</a>
+              </p>
+            </div>
+            <div class="bg-surface-50 border border-surface-300 rounded-2xl p-6">
+              <h3 class="text-sm font-medium text-ink-800 mb-1">Email</h3>
+              <p class="text-sm">
+                <a href="mailto:admin@gncfinancial.com.au" class="hover:text-accent-600 transition-colors">admin@gncfinancial.com.au</a>
+              </p>
+            </div>
+            <div class="bg-surface-50 border border-surface-300 rounded-2xl p-6">
+              <h3 class="text-sm font-medium text-ink-800 mb-1">Book online</h3>
+              <p class="text-sm text-ink-500">
+                <!-- TODO: Replace with actual Calendly or booking link -->
+                <a href="#" class="text-accent-700 underline underline-offset-2 hover:text-accent-600 transition-colors" data-placeholder="true">
+                  Book a free consult online &rarr;
+                </a>
+              </p>
+            </div>
+          </address>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       MAP
+       ============================================ -->
+  <section class="bg-surface-200 py-20 md:py-28">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <h2 class="font-display text-2xl md:text-3xl font-semibold text-ink-800 mb-8 text-center reveal">Find us</h2>
+      <div class="rounded-2xl overflow-hidden h-80 md:h-96 shadow-xl reveal">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3314.776!2d150.9508!3d-33.7306!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12a0347b1e5c8d%3A0x0!2s33+Lexington+Dr%2C+Bella+Vista+NSW+2153!5e0!3m2!1sen!2sau!4v1"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="GNC Financial office location — 33 Lexington Drive, Bella Vista NSW 2153"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+</Page>
+
+<!-- Animations handled by shared Animations.astro component -->

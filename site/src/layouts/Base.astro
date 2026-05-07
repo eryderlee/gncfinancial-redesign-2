@@ -1,0 +1,42 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+}
+
+const { title, description, canonicalPath } = Astro.props;
+const canonical = `https://gncfinancial.com.au${canonicalPath || Astro.url.pathname}`;
+const fullTitle = `${title} — GNC Financial · Hills District Accountants`;
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_AU" />
+    <ClientRouter />
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Reading progress bar -->
+    <div class="reading-progress" aria-hidden="true"></div>
+    <slot name="header" />
+    <main class="flex-1" transition:animate="fade">
+      <slot />
+    </main>
+    <slot name="footer" />
+  </body>
+</html>
