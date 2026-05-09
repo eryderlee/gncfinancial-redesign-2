@@ -419,6 +419,35 @@ body::after {
   z-index: 1;
 }
 
+/* Eyebrow above the home hero headline — matches the inner-page
+   page-hero-eyebrow but tuned for the dark video background (lighter
+   accent shade so it reads cleanly over warm bokeh). */
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent-400);
+  margin-bottom: 1rem;
+  /* Subtle text-shadow for legibility over any video frame */
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+  /* Animate in slightly before the h1 (which has 0.15s delay) */
+  animation: heroReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
+}
+.hero-eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  background-color: var(--color-accent-400);
+  display: inline-block;
+  /* Match the orange dot from the logo's brand mark */
+  box-shadow: 0 0 12px rgba(232, 128, 26, 0.45);
+}
+
 /* Small accent eyebrow above headlines on inner pages — orange line +
    small caps label, editorial feel. */
 .page-hero-eyebrow {
@@ -1370,45 +1399,36 @@ body::after {
   color: var(--color-accent-400);
 }
 
-/* Book-a-call nav CTA — quiet pill that echoes the brand dot.
-   Light header: thin ink border, transparent → fills accent on hover.
-   Home (dark/glass): thin white border, glass bg → brightens on hover.
-   Deliberately not loud-accent on home so it doesn't compete with the hero CTA. */
+/* Book-a-call nav CTA — the only branded element in the nav, so it should
+   read as "primary action" without being a loud full-fill button.
+   Premium move: subtle accent-tinted bg + accent border + accent text at
+   rest. Full saturation only on hover. */
 .site-nav-cta {
-  color: var(--color-ink-800);
-  border-color: rgba(14, 14, 14, 0.18);
-  background: transparent;
+  color: var(--color-accent-700);
+  border-color: rgba(232, 128, 26, 0.35);
+  background: rgba(232, 128, 26, 0.07);
   letter-spacing: -0.005em;
+  font-weight: 600;
+  box-shadow:
+    0 1px 2px rgba(232, 128, 26, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 .site-nav-cta:hover {
   color: #fff;
   background: var(--color-accent-600);
   border-color: var(--color-accent-600);
-  box-shadow: 0 6px 18px -8px rgba(232, 128, 26, 0.5);
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 20px -6px rgba(232, 128, 26, 0.55),
+    0 1px 2px rgba(0, 0, 0, 0.06);
 }
 .site-nav-cta .site-nav-cta-arrow {
-  opacity: 0.7;
+  opacity: 0.85;
   transition: transform 0.2s, opacity 0.2s;
 }
 .site-nav-cta:hover .site-nav-cta-arrow {
   transform: translateX(2px);
   opacity: 1;
-}
-
-/* Home variant — glassy, white text. Hover brightens, doesn't flip to orange. */
-.site-header-home .site-nav-cta {
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.28);
-  background: rgba(255, 255, 255, 0.04);
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-.site-header-home .site-nav-cta:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.55);
-  box-shadow: none;
 }
 
 /* Mobile menu trigger */

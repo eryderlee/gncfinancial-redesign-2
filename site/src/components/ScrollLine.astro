@@ -350,13 +350,41 @@
     function bind() {
       setup();
       update();
-      // Clear any inline opacity/transition that cleanup may have set, so
-      // the CSS class can drive the fade-in cleanly.
+      // Clear inline opacity/transition that cleanup set, so the CSS class
+      // can drive the fade-in. NOTE: we do NOT add is-ready yet — wait
+      // until two consecutive update() calls return matching dimensions
+      // (i.e. layout has settled). On mobile Safari especially, layout
+      // can take 200-500ms after astro:page-load to stabilise; revealing
+      // the line before then shows it at the wrong position briefly.
       if (wrapper) {
         wrapper.style.opacity = "";
         wrapper.style.transition = "";
       }
-      wrapper!.classList.add("is-ready");
+
+      let stableHits = 0;
+      let prevStableH = -1;
+      const READY_TIMEOUT_MS = 1500; // hard ceiling — show the line eventually
+      const startedAt = performance.now();
+      const tryReady = () => {
+        if (!wrapper || wrapper.classList.contains("is-ready")) return;
+        const prevH = lastH;
+        update();
+        const stable =
+          totalLength > 50 &&
+          Math.abs(lastH - prevH) < 0.5 &&
+          Math.abs(lastH - prevStableH) < 0.5;
+        if (stable) stableHits++;
+        else stableHits = 0;
+        prevStableH = lastH;
+        // Show after 2 stable hits (~300ms of consistent layout) OR after
+        // hitting the ceiling — whichever comes first.
+        if (stableHits >= 2 || performance.now() - startedAt > READY_TIMEOUT_MS) {
+          wrapper.classList.add("is-ready");
+          return;
+        }
+        setTimeout(tryReady, 150);
+      };
+      setTimeout(tryReady, 80);
 
       // update() now reanchors the SVG to the dot's current position every
       // frame — but it only runs on scroll events. We need it to also run
