@@ -28,6 +28,10 @@ const fullTitle = `${title} — GNC Financial · Hills District Accountants`;
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="en_AU" />
     <ClientRouter />
+    <!-- Google Fonts: Inter, Fraunces, Lora, Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Fraunces:opsz,wght@9..144,400..700&family=Lora:wght@400..700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet" />
     <slot name="head" />
     <!-- Apply persisted theme before paint to avoid colour flash on load -->
     <script is:inline>

@@ -60,8 +60,8 @@
   --color-muted-950: #1E1B18;
 
   /* Font families */
-  --font-display: "Fraunces Variable", Georgia, serif;
-  --font-body: "Inter Variable", system-ui, sans-serif;
+  --font-display: "Fraunces Variable", "Fraunces", Georgia, serif;
+  --font-body: "Inter Variable", "Inter", system-ui, sans-serif;
 
   /* Container */
   --container-max-width: 1200px;
@@ -217,7 +217,7 @@
 /* Credo paragraph uses Lora ONLY in the ported (alt) theme — default
    theme keeps Fraunces. */
 [data-theme="ported"] .credo-block p {
-  font-family: "Lora Variable", Georgia, serif;
+  font-family: "Lora Variable", "Lora", Georgia, serif;
   max-width: 30rem;
 }
 
