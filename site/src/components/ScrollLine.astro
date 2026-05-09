@@ -350,6 +350,12 @@
     function bind() {
       setup();
       update();
+      // Clear any inline opacity/transition that cleanup may have set, so
+      // the CSS class can drive the fade-in cleanly.
+      if (wrapper) {
+        wrapper.style.opacity = "";
+        wrapper.style.transition = "";
+      }
       wrapper!.classList.add("is-ready");
 
       // update() now reanchors the SVG to the dot's current position every
@@ -414,15 +420,30 @@
         credoObserver?.disconnect();
         bodyObserver?.disconnect();
         timeouts.forEach((id) => window.clearTimeout(id));
-        wrapper?.classList.remove("is-ready");
-        // Clear path geometry so Safari's view-transition snapshot has no
-        // stale data to display alongside the freshly-mounted SVG. Without
-        // this, returning to home from another page shows a ghost straight
-        // line on top of the curved one.
+        // Force IMMEDIATE invisibility — the CSS opacity transition (0.6s)
+        // would otherwise leave a fading ghost during the 300ms view-
+        // transition cross-fade. Inline style beats the class.
+        if (wrapper) {
+          wrapper.style.opacity = "0";
+          wrapper.style.transition = "none";
+          wrapper.classList.remove("is-ready");
+        }
+        // Clear path geometry so the snapshot has no stale data to display
+        // alongside the freshly-mounted SVG.
         const lp = document.querySelector<SVGPathElement>("[data-scroll-line-path-light]");
         path?.removeAttribute("d");
         lp?.removeAttribute("d");
-        // Also reset cached dims so the next bind() rebuilds the path fresh.
+        // Wipe inline strokeDashoffset/strokeDasharray too — snapshot may
+        // capture computed style, not just attributes.
+        if (path) {
+          path.style.strokeDashoffset = "";
+          path.style.strokeDasharray = "";
+        }
+        if (lp) {
+          lp.style.strokeDashoffset = "";
+          lp.style.strokeDasharray = "";
+        }
+        // Reset cached dims so the next bind() rebuilds the path fresh.
         lastH = 0;
         lastStartX = 0;
         lastEndX = 0;
@@ -445,10 +466,16 @@
   }
   document.addEventListener("astro:page-load", initScrollLine);
 
-  // Run cleanup BEFORE Astro swaps the DOM, so the outgoing page's path
-  // geometry is wiped before Safari captures it as a view-transition snapshot.
-  // Without this, navigating away then back shows a ghost line until refresh.
-  document.addEventListener("astro:before-swap", () => {
-    __slCleanup?.();
-  });
+  // Run cleanup BEFORE the browser snapshots the page for view transitions.
+  // - astro:before-preparation fires before the snapshot is captured. This
+  //   is the critical one — clearing the path d here means the snapshot has
+  //   no line geometry to ghost during the cross-fade.
+  // - astro:before-swap fires after snapshot, before DOM replace; kept as a
+  //   secondary safety so the new page DOM starts clean.
+  // - pagehide fires for full navigations (no view transitions); covers the
+  //   case where the user disables view transitions or browser doesn't run them.
+  const cleanupOnNavigate = () => __slCleanup?.();
+  document.addEventListener("astro:before-preparation", cleanupOnNavigate);
+  document.addEventListener("astro:before-swap", cleanupOnNavigate);
+  window.addEventListener("pagehide", cleanupOnNavigate);
 </script>
