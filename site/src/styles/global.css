@@ -379,30 +379,24 @@ body::after {
 }
 
 /* ============================================
-   PAGE HERO — used on inner pages (about/services/contact/insights).
-   Cream surface so the page header is bright (not dark like the home
-   hero), with a soft warm radial that ties to the brand and a barely-
-   visible dot grid for depth. Designed to be PLACED above light sections
-   without a colour clash. */
+   PAGE HERO — inner pages (about/services/contact/insights).
+   Brand cream (surface-200) so there's a clear tonal step down from the
+   white header above. Soft warm radial on the right ties to brand;
+   hairline top inset shadow gives an extra crisp divide. */
 .page-hero {
   position: relative;
-  background-color: var(--color-surface-50);
+  /* surface-200 (#FBF7F1) — visibly cream against the white header */
+  background-color: var(--color-surface-200);
   background-image:
-    /* Warm radial echoing the home hero's "light through curtain" — placed
-       on the right so the headline area on the left stays clean. */
+    /* Warm radial echoing the home hero's "light through curtain" */
     radial-gradient(
       ellipse 65% 110% at 92% 45%,
       rgba(232, 128, 26, 0.13) 0%,
       rgba(232, 128, 26, 0.05) 35%,
       transparent 70%
-    ),
-    /* Very gentle warm wash from the top — softens the boundary with the
-       header above it. */
-    linear-gradient(
-      180deg,
-      rgba(232, 128, 26, 0.045) 0%,
-      transparent 35%
     );
+  /* Hairline inset shadow at the top — sharp boundary with the header */
+  box-shadow: inset 0 1px 0 rgba(14, 14, 14, 0.06);
   overflow: hidden;
 }
 
@@ -1459,27 +1453,30 @@ body::after {
     visibility 0s 0s;
 }
 
-/* Drawer itself: anchored to the right edge, slides in from outside. */
+/* Drawer itself: anchored to the right edge, slides in from outside.
+   Clean solid dark with a single hairline warm wash — no radial blobs. */
 .mobile-menu-overlay {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  /* Constrained width — feels like a drawer, not a full takeover */
-  width: min(85vw, 360px);
+  width: min(85vw, 320px);
   z-index: 100;
   background-color: #0E0E0E;
-  background-image:
-    radial-gradient(ellipse at 30% 20%, rgba(232, 128, 26, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 90%, rgba(232, 128, 26, 0.12) 0%, transparent 55%);
-  /* Subtle left edge highlight where the drawer meets the backdrop */
+  /* Single faint warm gradient for character, no loud radials */
+  background-image: linear-gradient(
+    180deg,
+    rgba(232, 128, 26, 0.04) 0%,
+    transparent 30%
+  );
   box-shadow:
     -24px 0 60px -12px rgba(0, 0, 0, 0.6),
     inset 1px 0 0 rgba(255, 255, 255, 0.04);
   transform: translateX(100%);
   transition: transform 350ms cubic-bezier(0.32, 0.72, 0.27, 1);
   visibility: hidden;
-  /* Allow scrolling inside the drawer if menu is taller than viewport */
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -1489,17 +1486,133 @@ body::after {
   visibility: visible;
 }
 
-/* Tighter mobile-menu inner layout — drawer is narrower than full screen */
-.mobile-menu-overlay nav {
-  align-items: flex-start;
-  padding: 0 1.6rem;
-  gap: 1.4rem;
-  padding-top: 2.5rem;
+/* === Drawer top bar (logo + close button) === */
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
-.mobile-menu-overlay nav a {
-  font-size: 1.5rem;
-  text-align: left;
+.mobile-menu-header img {
+  height: 30px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+.mobile-menu-close {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.55);
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.mobile-menu-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* === Section label "Navigate" === */
+.mobile-menu-label {
+  display: block;
+  padding: 1.4rem 1.4rem 0.5rem;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* === Nav links list === */
+.mobile-menu-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.6rem;
+}
+.mobile-menu-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0.8rem;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background 0.15s, color 0.15s;
+}
+.mobile-menu-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
+.mobile-menu-link.is-active {
+  background: rgba(232, 128, 26, 0.12);
+  color: var(--color-accent-400);
+}
+.mobile-menu-link svg {
+  opacity: 0.4;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.mobile-menu-link:hover svg {
+  opacity: 0.8;
+  transform: translateX(2px);
+}
+.mobile-menu-link.is-active svg {
+  opacity: 0.9;
+  color: var(--color-accent-400);
+}
+
+/* === Drawer footer: phone + CTA, pinned to bottom === */
+.mobile-menu-footer {
+  margin-top: auto;
+  padding: 1.6rem 1.4rem 1.6rem;
+  /* Respect iOS safe area */
+  padding-bottom: max(1.6rem, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.mobile-menu-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.mobile-menu-phone:hover { color: var(--color-accent-400); }
+.mobile-menu-phone svg { opacity: 0.6; }
+
+.mobile-menu-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  background-color: var(--color-accent-600);
+  color: #fff;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 6px 16px -4px rgba(232, 128, 26, 0.45);
+}
+.mobile-menu-cta:hover {
+  background-color: var(--color-accent-500);
+  box-shadow: 0 8px 20px -4px rgba(232, 128, 26, 0.55);
 }
 
 /* ============================================
