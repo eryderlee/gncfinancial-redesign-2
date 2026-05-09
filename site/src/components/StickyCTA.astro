@@ -15,42 +15,54 @@
 </div>
 
 <script>
+  // Module-level cleanup so re-inits on astro:page-load don't stack listeners.
+  let __stickyCleanup: (() => void) | null = null;
+
   function initStickyCta() {
+    __stickyCleanup?.();
+
     const stickyCta = document.getElementById('sticky-cta');
     if (!stickyCta) return;
 
+    // Scroll-position check (works reliably on Safari, where IntersectionObserver
+    // can mis-fire on full-viewport-height targets / after view transitions).
     const hero = document.querySelector<HTMLElement>('.hero-anchor');
     const footer = document.querySelector<HTMLElement>('footer');
 
-    let heroVisible = !!hero;
-    let footerVisible = false;
-
     const sync = () => {
-      const shouldShow = !heroVisible && !footerVisible;
+      const vh = window.innerHeight;
+
+      // Hero: hide CTA while ANY part of hero is still on screen
+      // (i.e. its bottom hasn't passed the top of the viewport).
+      // No hero on this page → treat as "past hero".
+      const heroBottom = hero ? hero.getBoundingClientRect().bottom : -1;
+      const pastHero = heroBottom <= 0;
+
+      // Footer: hide CTA when footer's top has entered the viewport.
+      const footerTop = footer ? footer.getBoundingClientRect().top : Number.POSITIVE_INFINITY;
+      const footerVisible = footerTop < vh;
+
+      const shouldShow = pastHero && !footerVisible;
       stickyCta.classList.toggle('translate-y-full', !shouldShow);
     };
 
-    if (hero) {
-      const heroObserver = new IntersectionObserver(
-        ([entry]) => {
-          heroVisible = entry.isIntersecting;
-          sync();
-        },
-        { threshold: 0 }
-      );
-      heroObserver.observe(hero);
-    }
+    let rafScheduled = false;
+    const onScroll = () => {
+      if (rafScheduled) return;
+      rafScheduled = true;
+      requestAnimationFrame(() => {
+        rafScheduled = false;
+        sync();
+      });
+    };
 
-    if (footer) {
-      const footerObserver = new IntersectionObserver(
-        ([entry]) => {
-          footerVisible = entry.isIntersecting;
-          sync();
-        },
-        { threshold: 0 }
-      );
-      footerObserver.observe(footer);
-    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', sync);
+
+    __stickyCleanup = () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', sync);
+    };
 
     sync();
   }

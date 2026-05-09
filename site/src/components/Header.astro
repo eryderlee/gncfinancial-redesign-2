@@ -12,12 +12,8 @@ const isHome = currentPath === '/';
 ---
 
 <header
-  class:list={[
-    "sticky top-0 z-50 transition-all duration-300",
-    isHome ? "site-header-home" : "bg-surface-50/95 backdrop-blur-sm border-b border-surface-300",
-  ]}
+  class="sticky top-0 z-50 transition-all duration-300 bg-surface-50/95 backdrop-blur-sm border-b border-surface-300"
   id="site-header"
-  data-home={isHome ? 'true' : 'false'}
 >
   <div class="max-w-[1200px] mx-auto px-5 md:px-10 flex items-center justify-between h-16 md:h-20">
     <a href="/" class="flex-shrink-0" aria-label="GNC Financial home" transition:name="logo">
@@ -26,10 +22,7 @@ const isHome = currentPath === '/';
         alt="GNC Financial"
         width="180"
         height="40"
-        class:list={[
-          "h-9 md:h-10 w-auto transition-all duration-300",
-          isHome && "site-header-logo",
-        ]}
+        class="h-9 md:h-10 w-auto transition-all duration-300"
       />
     </a>
 
@@ -48,14 +41,27 @@ const isHome = currentPath === '/';
       ))}
     </nav>
 
-    <!-- Phone (desktop) -->
-    <a
-      href="tel:0284032770"
-      class="site-nav-phone hidden lg:flex items-center gap-2 text-sm font-medium transition-colors duration-150"
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-      02 8403 2770
-    </a>
+    <!-- Right cluster: phone + CTA -->
+    <div class="hidden md:flex items-center gap-5 lg:gap-6">
+      <!-- Phone (lg+) -->
+      <a
+        href="tel:0284032770"
+        class="site-nav-phone hidden lg:flex items-center gap-2 text-sm font-medium transition-colors duration-150"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        02 8403 2770
+      </a>
+
+      <!-- Book a call CTA (desktop) -->
+      <a
+        href="/contact/"
+        class="site-nav-cta inline-flex items-center gap-2 text-sm font-medium rounded-full border px-4 py-2 transition-all duration-200"
+        aria-label="Book a call"
+      >
+        <span>Book a call</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="site-nav-cta-arrow shrink-0" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
 
     <!-- Mobile menu button -->
     <button
@@ -135,19 +141,6 @@ const isHome = currentPath === '/';
     btn?.addEventListener('click', openMenu);
     closeBtn?.addEventListener('click', closeMenu);
     menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
-
-    // Transparent → solid header on scroll (home page only)
-    if (header?.dataset.home === 'true') {
-      const onScroll = () => {
-        if (window.scrollY > 60) {
-          header.classList.add('site-header-scrolled');
-        } else {
-          header.classList.remove('site-header-scrolled');
-        }
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-    }
   }
 
   document.addEventListener('astro:page-load', initHeader);

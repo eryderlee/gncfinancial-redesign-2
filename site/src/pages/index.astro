@@ -194,13 +194,44 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
   })} />
 
   <!-- ============================================
-       HERO — Animated mesh gradient, dark bg, full viewport
+       HERO — AI video bg (desktop), static poster (mobile + reduced-motion).
+       Drop assets into /public/hero/:
+         hero.webm   — preferred (smaller, ~800KB target)
+         hero.mp4    — fallback for Safari < 14 / older mobile
+         poster.jpg  — first frame; shown before video loads + on mobile
+                       Recommended: 1920x1080, ~150-250KB JPG
        ============================================ -->
-  <section class="hero-gradient hero-anchor relative min-h-screen flex items-center -mt-16 md:-mt-20 pt-32 pb-20 md:pt-40 md:pb-28">
-    <!-- Decorative soft dot, far right -->
-    <div class="accent-dot-lg top-[20%] right-[12%] hidden lg:block"></div>
+  <section class="hero-video hero-anchor relative min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-5rem)] flex items-center pt-16 pb-20 md:pt-20 md:pb-28">
+    <!-- Background video (desktop/tablet only) -->
+    <video
+      class="hero-video-bg"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/hero/poster.jpg"
+      aria-hidden="true"
+    >
+      <source src="/hero/hero.webm" type="video/webm" />
+      <source src="/hero/hero.mp4" type="video/mp4" />
+    </video>
+    <!-- Static poster (mobile + prefers-reduced-motion) -->
+    <img
+      class="hero-video-poster"
+      src="/hero/poster.jpg"
+      alt=""
+      aria-hidden="true"
+      loading="eager"
+      decoding="async"
+    />
+    <!-- Dark gradient overlay for text legibility -->
+    <div class="hero-video-overlay" aria-hidden="true"></div>
+
     <div class="max-w-[1200px] mx-auto px-5 md:px-10 w-full">
-      <div class="max-w-2xl">
+      <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-10 lg:gap-16 items-center">
+        <!-- Left column: headline + subtitle + CTAs -->
+        <div class="max-w-2xl">
         <h1 class="font-display text-4xl md:text-5xl lg:text-[3.75rem] font-semibold text-white leading-[1.08] mb-5 hero-title">
           Numbers, sorted.
           <br />
@@ -224,6 +255,36 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
             See services
           </a>
         </div>
+        </div>
+        <!-- Right column: services-at-a-glance card with overlapping pill -->
+        <aside class="hero-card hidden lg:block reveal" aria-label="What we help with">
+          <span class="hero-card-pill">Hills District Specialists</span>
+          <h2 class="hero-card-heading">What can we help you with?</h2>
+          <ul class="hero-card-list">
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Tax returns &amp; planning
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Business accounting &amp; BAS
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Bookkeeping (Xero, MYOB)
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              SMSF &amp; compliance
+            </li>
+            <li>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Business advisory
+            </li>
+          </ul>
+          <a href="/contact/" class="hero-card-cta">Book a free chat</a>
+          <p class="hero-card-fineprint">Free initial consult · No obligation</p>
+        </aside>
       </div>
     </div>
   </section>
@@ -241,6 +302,20 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
   <section class="py-20 md:py-28 bg-surface-50 relative overflow-hidden" data-scroll-line-fade-end>
     <!-- Subtle dot grid -->
     <div class="absolute inset-0 opacity-[0.035] pointer-events-none" style="background-image: radial-gradient(circle, #0E0E0E 1px, transparent 1px); background-size: 24px 24px;"></div>
+    <!-- Dynamic backlight bleed from hero — a heavily-blurred copy of the
+         hero video extends down into the credo, like ambient light from a
+         backlit screen. Colours always match what's playing in the hero. -->
+    <div class="hero-bleed absolute inset-x-0 top-0 pointer-events-none overflow-hidden" aria-hidden="true">
+      <video
+        class="hero-bleed-video"
+        autoplay muted loop playsinline preload="metadata"
+        aria-hidden="true"
+      >
+        <source src="/hero/hero.webm" type="video/webm" />
+        <source src="/hero/hero.mp4" type="video/mp4" />
+      </video>
+      <img class="hero-bleed-poster" src="/hero/poster.jpg" alt="" aria-hidden="true" />
+    </div>
     <div class="max-w-[1200px] mx-auto px-5 md:px-10 text-center relative">
       <div class="reveal credo-block">
         <span id="line-source" class="accent-dot mx-auto mb-6 block"></span>
@@ -763,13 +838,17 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
   </section>
 
   <!-- ============================================
-       BOTTOM CTA
+       BOTTOM CTA — visual reprise of the hero. Same video, but heavily
+       blurred + dark-overlaid so it reads as a moodier "closing" version
+       of the opening atmosphere. CTA button orange pops against the wash.
        ============================================ -->
-  <section class="hero-gradient py-24 md:py-32 text-center">
+  <section class="hero-cta-section relative overflow-hidden py-24 md:py-32 text-center">
+    <!-- Subtle dot grid texture for premium depth -->
+    <div class="hero-cta-grid absolute inset-0 pointer-events-none" aria-hidden="true"></div>
     <div class="max-w-[1200px] mx-auto px-5 md:px-10">
       <div class="reveal">
         <h2 class="font-display text-3xl md:text-4xl font-semibold text-white mb-4">Ready to get your numbers sorted?</h2>
-        <p class="text-surface-400 mb-10 max-w-md mx-auto">Book a free, no-obligation consult with Glenn and the team.</p>
+        <p class="text-surface-300 mb-10 max-w-md mx-auto">Book a free, no-obligation consult with Glenn and the team.</p>
         <a
           id="line-target"
           href="/contact/"

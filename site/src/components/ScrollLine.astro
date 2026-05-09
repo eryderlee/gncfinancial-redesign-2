@@ -305,21 +305,39 @@
       if (totalLength === 0) return;
 
       // Drawing window: starts when the dot enters at 80% of the viewport,
-      // ends when the booking button reaches 35% from the top — long enough
-      // that the user actually sees the tip "arrive".
+      // ends when the booking button reaches 35% from the top.
       const startThreshold = window.innerHeight * 0.8;
       const endThreshold = window.innerHeight * 0.35;
       const startViewportY = sRect ? sRect.top + sRect.height / 2 : wRect.top;
       const lineHeight = Math.max(1, h);
       const drawDistance = lineHeight + (startThreshold - endThreshold);
       const raw = (startThreshold - startViewportY) / drawDistance;
-      const progress = Math.max(0, Math.min(1, raw));
+      const linear = Math.max(0, Math.min(1, raw));
+      // 1:1 with scroll for the early/middle portion (start feel unchanged).
+      // After ACCEL_FROM the line speeds up at a constant 1.75x rate so it
+      // visually completes at COMPLETE_AT — well before the user reaches the
+      // end of the scroll window, so they don't have to scroll the full way
+      // to "land" the line on the button. No ease-out at the end → no
+      // deceleration into the button.
+      const ACCEL_FROM = 0.72;
+      const COMPLETE_AT = 0.93;
+      let progress: number;
+      if (linear < ACCEL_FROM) {
+        progress = linear;
+      } else if (linear >= COMPLETE_AT) {
+        progress = 1;
+      } else {
+        const t = (linear - ACCEL_FROM) / (COMPLETE_AT - ACCEL_FROM);
+        progress = ACCEL_FROM + (1 - ACCEL_FROM) * t;
+      }
       const offset = totalLength * (1 - progress);
 
       path!.style.strokeDashoffset = String(offset);
       if (lightPath) lightPath.style.strokeDashoffset = String(offset);
 
-      const arrived = progress >= 0.985;
+      // Fire the CTA glow the moment the line actually reaches the button
+      // (i.e. the same scroll position where progress hits 1.0).
+      const arrived = linear >= COMPLETE_AT;
       if (arrived && !ctaReached) {
         ctaReached = true;
         document.dispatchEvent(new CustomEvent("cta-line-reached"));
@@ -397,6 +415,18 @@
         bodyObserver?.disconnect();
         timeouts.forEach((id) => window.clearTimeout(id));
         wrapper?.classList.remove("is-ready");
+        // Clear path geometry so Safari's view-transition snapshot has no
+        // stale data to display alongside the freshly-mounted SVG. Without
+        // this, returning to home from another page shows a ghost straight
+        // line on top of the curved one.
+        const lp = document.querySelector<SVGPathElement>("[data-scroll-line-path-light]");
+        path?.removeAttribute("d");
+        lp?.removeAttribute("d");
+        // Also reset cached dims so the next bind() rebuilds the path fresh.
+        lastH = 0;
+        lastStartX = 0;
+        lastEndX = 0;
+        totalLength = 0;
       };
     }
 
@@ -414,4 +444,11 @@
     initScrollLine();
   }
   document.addEventListener("astro:page-load", initScrollLine);
+
+  // Run cleanup BEFORE Astro swaps the DOM, so the outgoing page's path
+  // geometry is wiped before Safari captures it as a view-transition snapshot.
+  // Without this, navigating away then back shows a ghost line until refresh.
+  document.addEventListener("astro:before-swap", () => {
+    __slCleanup?.();
+  });
 </script>

@@ -133,40 +133,298 @@ body::after {
 }
 
 /* ============================================
-   ANIMATED MESH GRADIENT HERO
+   HERO — AI video background w/ static poster fallback
    ============================================ */
 
-.hero-gradient {
+.hero-video {
   position: relative;
   background-color: var(--color-ink-900);
   overflow: hidden;
+  /* Subtle warm gradient under the video so the colour temperature is right
+     even before the video bytes arrive (or if it fails to load entirely). */
+  background-image:
+    radial-gradient(ellipse at 30% 40%, rgba(232, 128, 26, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 70%, rgba(232, 128, 26, 0.10) 0%, transparent 60%);
 }
 
-.hero-gradient::before {
-  content: "";
+/* Background layers (video + poster img) sit absolute so they don't break the
+   section's flex layout. Only one is visible at a time via display rules below. */
+.hero-video-bg,
+.hero-video-poster {
   position: absolute;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  /* Keep the warm tone consistent if the asset is slightly cool. Tweak if not needed. */
+  /* filter: saturate(1.05); */
+}
+
+/* Default state on desktop/tablet: video plays, poster hidden. */
+.hero-video-poster { display: none; }
+
+/* Mobile: hide video to save data + battery, show static poster instead. */
+@media (max-width: 767px) {
+  .hero-video-bg { display: none; }
+  .hero-video-poster { display: block; }
+}
+
+/* Respect prefers-reduced-motion at any size — show static poster only. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-video-bg { display: none; }
+  .hero-video-poster { display: block; }
+}
+
+/* Dark gradient overlay tuned for the current "warm light through curtain"
+   poster: bright sunlit area on the LEFT (where the headline sits), darker
+   on the right. So the overlay darkens HEAVILY on the left for headline
+   legibility, fades to transparent on the right so the dark side of the
+   image reads naturally, plus a soft bottom darken for the CTA row. */
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background:
-    radial-gradient(ellipse at 20% 50%, rgba(232, 128, 26, 0.30) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(232, 128, 26, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 80%, rgba(251, 247, 241, 0.08) 0%, transparent 40%),
-    radial-gradient(ellipse at 30% 70%, rgba(232, 128, 26, 0.10) 0%, transparent 60%);
-  animation: meshDrift 20s ease-in-out infinite alternate;
+    /* Left-to-right: heavy darken over the bright headline area, fading off
+       past 60% so the right side of the image (the dark fold) breathes. */
+    linear-gradient(
+      90deg,
+      rgba(14, 14, 14, 0.62) 0%,
+      rgba(14, 14, 14, 0.50) 25%,
+      rgba(14, 14, 14, 0.30) 50%,
+      rgba(14, 14, 14, 0.10) 75%,
+      rgba(14, 14, 14, 0.00) 100%
+    ),
+    /* Bottom darken so the subtitle + CTA row stay legible over any frame. */
+    linear-gradient(
+      180deg,
+      rgba(14, 14, 14, 0.20) 0%,
+      transparent 35%,
+      transparent 60%,
+      rgba(14, 14, 14, 0.35) 100%
+    );
+}
+
+/* Lift every direct content child above the video + overlay. Bg layers and
+   the overlay are excluded so they stay below. */
+.hero-video > *:not(.hero-video-bg):not(.hero-video-poster):not(.hero-video-overlay) {
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================
+   HERO RIGHT-SIDE CARD — services-at-a-glance with overlapping pill
+   ============================================ */
+.hero-card {
+  position: relative;
+  background-color: var(--color-surface-50);
+  background-image: linear-gradient(
+    180deg,
+    transparent 60%,
+    rgba(232, 128, 26, 0.05) 100%
+  );
+  border-radius: 22px;
+  padding: 2.4rem 1.8rem 1.6rem;
+  box-shadow:
+    0 28px 60px -22px rgba(0, 0, 0, 0.55),
+    0 8px 18px -8px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  /* Slight upward translate so the card feels "lifted" off the video */
+  transform: translateY(0);
+}
+
+/* Pill badge that overlaps the top edge of the card */
+.hero-card-pill {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--color-accent-600);
+  color: #fff;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow:
+    0 8px 18px -6px rgba(232, 128, 26, 0.55),
+    0 0 0 4px rgba(232, 128, 26, 0.08);
+}
+
+.hero-card-heading {
+  font-family: "Fraunces Variable", "Fraunces", Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-ink-800);
+  text-align: center;
+  margin: 0 0 1.4rem;
+  line-height: 1.2;
+}
+
+.hero-card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.hero-card-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--color-ink-700);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.hero-card-list svg {
+  flex-shrink: 0;
+  color: var(--color-accent-600);
+  margin-top: 1px;
+}
+
+.hero-card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: var(--color-accent-600);
+  color: #fff;
+  font-weight: 500;
+  padding: 0.85rem 1rem;
+  border-radius: 0.625rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 6px 16px -4px rgba(232, 128, 26, 0.4);
+}
+
+.hero-card-cta:hover {
+  background-color: var(--color-accent-500);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px -4px rgba(232, 128, 26, 0.5);
+}
+
+.hero-card-cta:active {
+  transform: translateY(0);
+}
+
+.hero-card-fineprint {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--color-ink-500);
+  margin: 0.85rem 0 0;
+}
+
+/* Dynamic backlight bleed (Magic UI "Backlight" pattern). A blurred copy of
+   the hero video sits at the top of the credo, scaled up so the colours
+   spread across the full width (avoiding the asymmetric "warm on one side,
+   blank on the other" look you get when the source content is one-sided). */
+.hero-bleed {
+  height: 90px;
+  /* Smooth non-linear fade. No hard edges anywhere along the height. */
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.85) 30%,
+    rgba(0, 0, 0, 0.50) 60%,
+    rgba(0, 0, 0, 0.15) 85%,
+    transparent 100%
+  );
+          mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.85) 30%,
+    rgba(0, 0, 0, 0.50) 60%,
+    rgba(0, 0, 0, 0.15) 85%,
+    transparent 100%
+  );
+}
+
+.hero-bleed-video,
+.hero-bleed-poster {
+  position: absolute;
+  /* Match the hero's full width exactly — no horizontal offset, so the
+     vertical strip of colours lines up with what's directly above. */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Scale UP so the video content overflows the bleed strip; the blur halo
+     then spreads colours across the full width and the asymmetric source
+     reads as a homogeneous warm wash rather than "left half only". */
+  transform: scale(1.6) translateZ(0);
+  transform-origin: center center;
+  filter: blur(40px) saturate(1.5) brightness(0.95);
+  will-change: filter, transform;
+}
+
+/* Mobile + reduced motion: swap the video for the static poster. */
+.hero-bleed-poster { display: none; }
+@media (max-width: 767px) {
+  .hero-bleed-video { display: none; }
+  .hero-bleed-poster { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-bleed-video { display: none; }
+  .hero-bleed-poster { display: block; }
+}
+
+/* ============================================
+   BOTTOM CTA — pure CSS, no video. Three layered light sources on a
+   dark warm base, plus a subtle dot grid for depth. Symmetric by
+   construction, so the brightness is uniform across the section.
+   ============================================ */
+.hero-cta-section {
+  background-color: var(--color-ink-900);
+  background-image:
+    /* Soft ambient warmth pouring down from the top edge */
+    radial-gradient(
+      ellipse 90% 60% at 50% 0%,
+      rgba(232, 128, 26, 0.10) 0%,
+      transparent 65%
+    ),
+    /* Subtle warm hint at the bottom edge — anchors the section */
+    radial-gradient(
+      ellipse 70% 50% at 50% 100%,
+      rgba(232, 128, 26, 0.06) 0%,
+      transparent 60%
+    ),
+    /* Strong warm halo centred behind the CTA button — makes the orange
+       button feel like it's blooming out of the surrounding warmth. */
+    radial-gradient(
+      ellipse 45% 65% at 50% 60%,
+      rgba(232, 128, 26, 0.22) 0%,
+      rgba(232, 128, 26, 0.08) 40%,
+      transparent 75%
+    );
+  isolation: isolate;
+}
+
+/* Premium dot-grid texture — barely there, but adds real depth. The
+   grid colour is a warm cream so it picks up on the brand palette. */
+.hero-cta-grid {
+  background-image: radial-gradient(
+    circle,
+    rgba(251, 247, 241, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
   z-index: 0;
 }
 
-.hero-gradient > * {
+/* Lift content above the grid. */
+.hero-cta-section > *:not(.hero-cta-grid) {
   position: relative;
   z-index: 1;
-}
-
-@keyframes meshDrift {
-  0%   { transform: translate(0%, 0%) rotate(0deg); }
-  33%  { transform: translate(5%, -3%) rotate(1deg); }
-  66%  { transform: translate(-3%, 5%) rotate(-1deg); }
-  100% { transform: translate(2%, -2%) rotate(0.5deg); }
 }
 
 /* ============================================
@@ -1044,6 +1302,47 @@ body::after {
 }
 .site-header-home .site-nav-phone:hover {
   color: var(--color-accent-400);
+}
+
+/* Book-a-call nav CTA — quiet pill that echoes the brand dot.
+   Light header: thin ink border, transparent → fills accent on hover.
+   Home (dark/glass): thin white border, glass bg → brightens on hover.
+   Deliberately not loud-accent on home so it doesn't compete with the hero CTA. */
+.site-nav-cta {
+  color: var(--color-ink-800);
+  border-color: rgba(14, 14, 14, 0.18);
+  background: transparent;
+  letter-spacing: -0.005em;
+}
+.site-nav-cta:hover {
+  color: #fff;
+  background: var(--color-accent-600);
+  border-color: var(--color-accent-600);
+  box-shadow: 0 6px 18px -8px rgba(232, 128, 26, 0.5);
+}
+.site-nav-cta .site-nav-cta-arrow {
+  opacity: 0.7;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.site-nav-cta:hover .site-nav-cta-arrow {
+  transform: translateX(2px);
+  opacity: 1;
+}
+
+/* Home variant — glassy, white text. Hover brightens, doesn't flip to orange. */
+.site-header-home .site-nav-cta {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.04);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.site-header-home .site-nav-cta:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
 }
 
 /* Mobile menu trigger */
