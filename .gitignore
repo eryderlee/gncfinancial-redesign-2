@@ -25,3 +25,9 @@ Thumbs.db
 
 # Misc
 .cache/
+
+# Raw AI generation outputs (kept locally as workspace files; the
+# optimised versions live in site/public/hero/)
+/kling_*.mp4
+/Soft_light_*.jpeg
+/Soft_light_*.jpg
