@@ -209,20 +209,22 @@ body::after {
     );
 }
 
-/* Lift every direct content child above the video + overlay. Bg layers and
-   the overlay are excluded so they stay below. */
-.hero-video > *:not(.hero-video-bg):not(.hero-video-poster):not(.hero-video-overlay) {
+/* Lift every direct content child above the video + overlay. Bg layers,
+   the overlay, and the bg switcher (which has its own positioning) are
+   excluded so they stay below or self-position. */
+.hero-video > *:not(.hero-video-bg):not(.hero-video-poster):not(.hero-video-overlay):not(.hero-bg-switcher) {
   position: relative;
   z-index: 2;
 }
 
-/* Hero background switcher — preview UI (temporary). Floats top-right
-   below the nav, glassmorphic dark pill with cycle icon + current label. */
+/* Hero background switcher — preview UI (temporary). Lives INSIDE the
+   hero section, absolutely positioned at the top-right. Scrolls away
+   with the hero (no longer sticky). */
 .hero-bg-switcher {
-  position: fixed;
-  top: 5.25rem;
-  right: 1.25rem;
-  z-index: 60;
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
@@ -267,11 +269,10 @@ body::after {
 }
 .hero-bg-switcher:hover .hero-bg-switcher-label { color: #fff; }
 
-/* Push down a bit on small screens so it doesn't collide with the
-   stacked hero content as much. */
+/* Tighter on small screens. */
 @media (max-width: 640px) {
   .hero-bg-switcher {
-    top: 4.5rem;
+    top: 1rem;
     right: 1rem;
     font-size: 0.72rem;
     padding: 0.42rem 0.8rem;
