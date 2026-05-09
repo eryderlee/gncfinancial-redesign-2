@@ -22,24 +22,21 @@
     const hero = document.querySelector<HTMLElement>('.hero-anchor');
     const footer = document.querySelector<HTMLElement>('footer');
 
-    let heroVisible = !!hero;
     let footerVisible = false;
 
+    // Hero visibility is measured from scroll position rather than via
+    // IntersectionObserver. Safari (especially iOS) sometimes mis-reports
+    // the initial intersection state when the script runs before layout
+    // settles, leaving the bar visible over the hero.
     const sync = () => {
+      let heroVisible = false;
+      if (hero) {
+        const rect = hero.getBoundingClientRect();
+        heroVisible = rect.bottom > 0;
+      }
       const shouldShow = !heroVisible && !footerVisible;
       stickyCta.classList.toggle('translate-y-full', !shouldShow);
     };
-
-    if (hero) {
-      const heroObserver = new IntersectionObserver(
-        ([entry]) => {
-          heroVisible = entry.isIntersecting;
-          sync();
-        },
-        { threshold: 0 }
-      );
-      heroObserver.observe(hero);
-    }
 
     if (footer) {
       const footerObserver = new IntersectionObserver(
@@ -52,6 +49,16 @@
       footerObserver.observe(footer);
     }
 
+    let rafId = 0;
+    const onScroll = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        sync();
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', sync);
     sync();
   }
 

@@ -305,10 +305,11 @@
       if (totalLength === 0) return;
 
       // Drawing window: starts when the dot enters at 80% of the viewport,
-      // ends when the booking button reaches 35% from the top — long enough
-      // that the user actually sees the tip "arrive".
+      // ends when the booking button reaches 55% from the top — long enough
+      // that the user actually sees the tip "arrive", but tightened from the
+      // original 35% so the line catches up to the button noticeably faster.
       const startThreshold = window.innerHeight * 0.8;
-      const endThreshold = window.innerHeight * 0.35;
+      const endThreshold = window.innerHeight * 0.55;
       const startViewportY = sRect ? sRect.top + sRect.height / 2 : wRect.top;
       const lineHeight = Math.max(1, h);
       const drawDistance = lineHeight + (startThreshold - endThreshold);
