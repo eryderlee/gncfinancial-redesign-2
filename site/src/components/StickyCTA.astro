@@ -4,7 +4,7 @@
 
 <div
   id="sticky-cta"
-  class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-accent-600 p-3 transform transition-transform duration-300 translate-y-full"
+  class="sticky-cta fixed bottom-0 left-0 right-0 z-40 md:hidden bg-accent-600 p-3 sticky-cta-hidden"
 >
   <a
     href="/contact/"
@@ -13,6 +13,31 @@
     Book a free consult
   </a>
 </div>
+
+<style is:global>
+  /* Custom hide rule that handles Safari's dynamic viewport: translate
+     past the layout viewport edge AND flip visibility once the slide-down
+     transition completes, so it can't peek out from under the URL bar
+     when the bar shrinks/grows. */
+  .sticky-cta {
+    transform: translateY(0);
+    visibility: visible;
+    transition:
+      transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0s 0s;
+  }
+  .sticky-cta.sticky-cta-hidden {
+    /* 100% own-height + a chunky safety margin so Safari's URL bar / safe
+       area can't leave a sliver visible. */
+    transform: translateY(calc(100% + 2.5rem));
+    visibility: hidden;
+    /* Delay the visibility flip until AFTER the slide-down transition
+       finishes, so the slide animation is preserved. */
+    transition:
+      transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+      visibility 0s 300ms;
+  }
+</style>
 
 <script>
   // Module-level cleanup so re-inits on astro:page-load don't stack listeners.
@@ -43,7 +68,7 @@
       const footerVisible = footerTop < vh;
 
       const shouldShow = pastHero && !footerVisible;
-      stickyCta.classList.toggle('translate-y-full', !shouldShow);
+      stickyCta.classList.toggle('sticky-cta-hidden', !shouldShow);
     };
 
     let rafScheduled = false;
