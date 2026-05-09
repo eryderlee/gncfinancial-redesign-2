@@ -4,7 +4,7 @@
 
 <div
   id="sticky-cta"
-  class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-accent-600 p-3 transform transition-transform duration-300"
+  class="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-accent-600 p-3 transform transition-transform duration-300 translate-y-full"
 >
   <a
     href="/contact/"
@@ -15,20 +15,50 @@
 </div>
 
 <script>
-  const stickyCta = document.getElementById('sticky-cta');
-  const footer = document.querySelector('footer');
+  function initStickyCta() {
+    const stickyCta = document.getElementById('sticky-cta');
+    if (!stickyCta) return;
 
-  if (stickyCta && footer) {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          stickyCta.classList.add('translate-y-full');
-        } else {
-          stickyCta.classList.remove('translate-y-full');
-        }
-      },
-      { threshold: 0 }
-    );
-    observer.observe(footer);
+    const hero = document.querySelector<HTMLElement>('.hero-anchor');
+    const footer = document.querySelector<HTMLElement>('footer');
+
+    let heroVisible = !!hero;
+    let footerVisible = false;
+
+    const sync = () => {
+      const shouldShow = !heroVisible && !footerVisible;
+      stickyCta.classList.toggle('translate-y-full', !shouldShow);
+    };
+
+    if (hero) {
+      const heroObserver = new IntersectionObserver(
+        ([entry]) => {
+          heroVisible = entry.isIntersecting;
+          sync();
+        },
+        { threshold: 0 }
+      );
+      heroObserver.observe(hero);
+    }
+
+    if (footer) {
+      const footerObserver = new IntersectionObserver(
+        ([entry]) => {
+          footerVisible = entry.isIntersecting;
+          sync();
+        },
+        { threshold: 0 }
+      );
+      footerObserver.observe(footer);
+    }
+
+    sync();
   }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStickyCta);
+  } else {
+    initStickyCta();
+  }
+  document.addEventListener('astro:page-load', initStickyCta);
 </script>
