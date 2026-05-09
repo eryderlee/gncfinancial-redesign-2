@@ -172,17 +172,17 @@ const isHome = currentPath === '/';
     backdrop?.addEventListener('click', closeMenu);
     menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
 
-    // Theme toggle: cycles between 'default' and 'ported' colour palettes.
-    // State stored in localStorage so it persists across pages + reloads.
+    // Theme toggle: cycles between 'ported' (navy — default) and 'warm'
+    // (original orange/cream). State stored in localStorage so it persists.
     const themeBtn = document.getElementById('theme-toggle');
     if (themeBtn) {
       themeBtn.addEventListener('click', () => {
-        const current = document.documentElement.dataset.theme || 'default';
-        const next = current === 'ported' ? 'default' : 'ported';
-        if (next === 'default') {
+        const current = document.documentElement.dataset.theme === 'ported' ? 'ported' : 'warm';
+        const next = current === 'ported' ? 'warm' : 'ported';
+        if (next === 'warm') {
           document.documentElement.removeAttribute('data-theme');
         } else {
-          document.documentElement.setAttribute('data-theme', next);
+          document.documentElement.setAttribute('data-theme', 'ported');
         }
         try { localStorage.setItem('gnc-theme', next); } catch (e) {}
       });

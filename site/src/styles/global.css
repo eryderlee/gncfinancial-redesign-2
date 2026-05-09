@@ -130,7 +130,14 @@
    is visible at a time via display:none. */
 .site-logo-ported { display: none; }
 [data-theme="ported"] .site-logo-default { display: none; }
-[data-theme="ported"] .site-logo-ported { display: block; }
+[data-theme="ported"] .site-logo-ported {
+  display: block;
+  /* Stacked alt logo (icon + text) sized proportionally for the nav. */
+  height: 3rem;
+}
+@media (min-width: 768px) {
+  [data-theme="ported"] .site-logo-ported { height: 3.75rem; }
+}
 
 /* Ported-theme nav: matches the netlify site's navy header. The gold
    alternate logo and white nav links are designed for this dark bg. */
@@ -309,7 +316,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--color-accent-400);
+  color: var(--color-accent-600);
   margin-bottom: 1.6rem;
 }
 .credentials-row {
@@ -328,34 +335,25 @@
   align-items: center;
   gap: 0.7rem;
 }
-/* White rounded container so the original logo colours always read,
-   regardless of the section's dark bg. Premium "card" treatment. */
+/* Logos sit naturally on the light cream bg — no containers needed. */
 .credentials-row li > img {
   height: 56px;
   width: auto;
   max-width: 180px;
   object-fit: contain;
-  background: #fff;
-  padding: 0.85rem 1.1rem;
-  border-radius: 12px;
-  box-shadow:
-    0 8px 24px -10px rgba(0, 0, 0, 0.5),
-    0 1px 2px rgba(0, 0, 0, 0.2);
-  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
-  /* Total height including padding: 56 + 1.7rem ≈ 84px */
+  opacity: 0.9;
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
 }
 .credentials-row li:hover > img {
-  transform: translateY(-3px);
-  box-shadow:
-    0 14px 32px -8px rgba(0, 0, 0, 0.55),
-    0 1px 2px rgba(0, 0, 0, 0.25);
+  opacity: 1;
+  transform: translateY(-2px);
 }
 .credentials-row-software li > img {
-  height: 36px;  /* software logos slightly smaller — supporting role */
+  height: 40px;  /* software logos slightly smaller — supporting role */
 }
 .credentials-caption {
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--color-ink-500);
   font-weight: 500;
 }
 
@@ -737,22 +735,35 @@ body::after {
    blank on the other" look you get when the source content is one-sided). */
 .hero-bleed {
   height: 90px;
-  /* Smooth non-linear fade. No hard edges anywhere along the height. */
+  /* Smooth ease-out mask — many small steps so the eye can't pick up
+     a discrete "line" where the bleed meets the cream credo bg. */
   -webkit-mask-image: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.85) 30%,
-    rgba(0, 0, 0, 0.50) 60%,
-    rgba(0, 0, 0, 0.15) 85%,
-    transparent 100%
+    rgba(0,0,0,1)    0%,
+    rgba(0,0,0,0.98) 10%,
+    rgba(0,0,0,0.92) 20%,
+    rgba(0,0,0,0.82) 30%,
+    rgba(0,0,0,0.68) 40%,
+    rgba(0,0,0,0.50) 50%,
+    rgba(0,0,0,0.32) 60%,
+    rgba(0,0,0,0.18) 70%,
+    rgba(0,0,0,0.08) 80%,
+    rgba(0,0,0,0.02) 90%,
+    transparent      100%
   );
           mask-image: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.85) 30%,
-    rgba(0, 0, 0, 0.50) 60%,
-    rgba(0, 0, 0, 0.15) 85%,
-    transparent 100%
+    rgba(0,0,0,1)    0%,
+    rgba(0,0,0,0.98) 10%,
+    rgba(0,0,0,0.92) 20%,
+    rgba(0,0,0,0.82) 30%,
+    rgba(0,0,0,0.68) 40%,
+    rgba(0,0,0,0.50) 50%,
+    rgba(0,0,0,0.32) 60%,
+    rgba(0,0,0,0.18) 70%,
+    rgba(0,0,0,0.08) 80%,
+    rgba(0,0,0,0.02) 90%,
+    transparent      100%
   );
 }
 
@@ -1866,10 +1877,10 @@ body::after {
    Hardcoded so they stay constant regardless of which theme is active —
    they're showing what each theme LOOKS LIKE, not the active one. */
 .theme-toggle-swatch-1 {
-  background: #E8801A;  /* current orange */
+  background: #C8933A;  /* default = ported gold */
 }
 .theme-toggle-swatch-2 {
-  background: #C8933A;  /* ported gold */
+  background: #E8801A;  /* alt = warm orange */
 }
 
 /* Mobile menu trigger */

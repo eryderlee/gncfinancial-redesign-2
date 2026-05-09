@@ -202,7 +202,9 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
                        Recommended: 1920x1080, ~150-250KB JPG
        ============================================ -->
   <section class="hero-video hero-anchor relative min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-5rem)] flex items-center pt-16 pb-20 md:pt-20 md:pb-28">
-    <!-- Background video (desktop/tablet only) — defaults to listening -->
+    <!-- Background video (desktop/tablet only) — defaults to unsplash
+         (still poster, no video sources). Sources are injected by the
+         switcher script when the user toggles to a video-backed option. -->
     <video
       class="hero-video-bg"
       autoplay
@@ -210,16 +212,13 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
       loop
       playsinline
       preload="metadata"
-      poster="/hero/poster-listening.jpg"
+      poster="/hero/poster-unsplash.jpg"
       aria-hidden="true"
-    >
-      <source src="/hero/hero-listening.webm" type="video/webm" />
-      <source src="/hero/hero-listening.mp4" type="video/mp4" />
-    </video>
+    ></video>
     <!-- Static poster (mobile + prefers-reduced-motion) -->
     <img
       class="hero-video-poster"
-      src="/hero/poster-listening.jpg"
+      src="/hero/poster-unsplash.jpg"
       alt=""
       aria-hidden="true"
       loading="eager"
@@ -321,11 +320,8 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
         class="hero-bleed-video"
         autoplay muted loop playsinline preload="metadata"
         aria-hidden="true"
-      >
-        <source src="/hero/hero-listening.webm" type="video/webm" />
-        <source src="/hero/hero-listening.mp4" type="video/mp4" />
-      </video>
-      <img class="hero-bleed-poster" src="/hero/poster-listening.jpg" alt="" aria-hidden="true" />
+      ></video>
+      <img class="hero-bleed-poster" src="/hero/poster-unsplash.jpg" alt="" aria-hidden="true" />
     </div>
     <div class="max-w-[1200px] mx-auto px-5 md:px-10 text-center relative">
       <div class="reveal credo-block">
@@ -403,7 +399,7 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
             ]}
           >
             <div class="w-12 h-12 rounded-xl bg-accent-50 flex items-center justify-center text-accent-600 mb-5 group-hover:bg-accent-600 group-hover:text-white transition-colors duration-200" set:html={service.icon} />
-            <h3 class="font-display text-xl font-medium text-ink-800 mb-2 group-hover:text-accent-700 transition-colors duration-150">
+            <h3 class="font-display text-xl font-semibold text-ink-800 mb-2 group-hover:text-accent-700 transition-colors duration-150">
               {service.title}
             </h3>
             <p class="text-sm text-ink-500 leading-relaxed mb-4">{service.description}</p>
@@ -433,7 +429,7 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
           <div class="text-sm text-ink-300 uppercase tracking-wider">Locally based</div>
         </div>
         <div class="reveal">
-          <div class="font-display text-4xl md:text-5xl font-semibold text-white mb-2">5<span class="text-accent-500">★</span></div>
+          <div class="font-display text-4xl md:text-5xl font-semibold text-white mb-2">4.9<span class="text-accent-500">★</span></div>
           <div class="text-sm text-ink-300 uppercase tracking-wider">Google reviews</div>
         </div>
         <div class="reveal">
@@ -461,9 +457,9 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
             <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.087 5.571.001-.001.002-.001.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
           </svg>
           <span class="text-sm text-surface-300">
-            <span class="font-semibold text-white">5.0</span>
+            <span class="font-semibold text-white">4.9</span>
             <span class="mx-1.5">·</span>
-            <span class="text-accent-500" aria-hidden="true">★★★★★</span>
+            <span class="text-accent-500" aria-hidden="true">★★★★⯨</span>
             <span class="mx-1.5">·</span>
             10+ Google reviews
           </span>
@@ -564,7 +560,7 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
               </span>
             )}
             <span class="inline-block text-xs font-medium bg-accent-50 text-accent-950 rounded-full px-3 py-1 mb-3">{post.category}</span>
-            <h3 class="font-display text-lg font-medium text-ink-800 mb-2 group-hover:text-accent-700 transition-colors duration-150 leading-snug">
+            <h3 class="font-display text-lg font-semibold text-ink-800 mb-2 group-hover:text-accent-700 transition-colors duration-150 leading-snug">
               {post.title}
             </h3>
             <p class="text-sm text-ink-500 leading-relaxed line-clamp-3">{post.excerpt}</p>
@@ -950,7 +946,7 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
       'adviser-meeting': '/hero/poster-adviser-meeting.jpg',
       laughing: '/hero/poster-laughing.jpg',
       review: '/hero/poster-review.jpg',
-      listening: '/hero/poster-listening.jpg',
+      listening: '/hero/poster-unsplash.jpg',
       welcome: '/hero/poster-welcome.jpg',
       report: '/hero/poster-report.jpg',
       unsplash: '/hero/poster-unsplash.jpg',
@@ -995,14 +991,27 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
     };
 
     const params = new URLSearchParams(window.location.search);
-    let current = params.get('hero') || 'listening';
-    if (OPTIONS.indexOf(current) === -1) current = 'listening';
+    let current = params.get('hero') || 'unsplash';
+    if (OPTIONS.indexOf(current) === -1) current = 'unsplash';
 
     function setVideoSources(videoEl, urls, posterUrl) {
       if (!videoEl) return;
-      const sources = videoEl.querySelectorAll('source');
-      if (sources[0]) sources[0].src = urls.webm;
-      if (sources[1]) sources[1].src = urls.mp4;
+      let sources = videoEl.querySelectorAll('source');
+      // Inject source elements if the markup didn't ship with any
+      // (default state has no sources; they're added on first toggle
+      // to a video-backed option).
+      if (sources.length < 2) {
+        videoEl.innerHTML = '';
+        const s1 = document.createElement('source');
+        s1.type = 'video/webm';
+        videoEl.appendChild(s1);
+        const s2 = document.createElement('source');
+        s2.type = 'video/mp4';
+        videoEl.appendChild(s2);
+        sources = videoEl.querySelectorAll('source');
+      }
+      sources[0].src = urls.webm;
+      sources[1].src = urls.mp4;
       if (posterUrl) videoEl.setAttribute('poster', posterUrl);
       videoEl.load();
     }
@@ -1043,7 +1052,7 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
       if (label) label.textContent = LABELS[option];
 
       const url = new URL(window.location.href);
-      if (option === 'listening') url.searchParams.delete('hero');
+      if (option === 'unsplash') url.searchParams.delete('hero');
       else url.searchParams.set('hero', option);
       history.replaceState({}, '', url);
     }
