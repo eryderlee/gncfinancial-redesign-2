@@ -178,34 +178,42 @@ body::after {
   .hero-video-poster { display: block; }
 }
 
-/* Dark gradient overlay tuned for the current "warm light through curtain"
-   poster: bright sunlit area on the LEFT (where the headline sits), darker
-   on the right. So the overlay darkens HEAVILY on the left for headline
-   legibility, fades to transparent on the right so the dark side of the
-   image reads naturally, plus a soft bottom darken for the CTA row. */
+/* Brand tint + legibility overlay — applied to EVERY hero image so all
+   variations share a unified warm-tinted look and the headline always
+   reads. Three stacked layers, top to bottom of background list:
+     1. Subtle warm brand-orange wash across the whole image (cohesion)
+     2. Strong left-side darken (headline area legibility)
+     3. Top + bottom darken (header + CTA legibility) */
 .hero-video-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
   background:
-    /* Left-to-right: heavy darken over the bright headline area, fading off
-       past 60% so the right side of the image (the dark fold) breathes. */
+    /* 1. Brand warm wash — barely visible on a single image but ties all
+       hero variants to the GNC palette regardless of source colour. */
+    linear-gradient(
+      180deg,
+      rgba(232, 128, 26, 0.07) 0%,
+      rgba(232, 128, 26, 0.05) 100%
+    ),
+    /* 2. Heavier left-to-right darken so the headline reads even on the
+       brightest source images. Bumped from 62% → 72% for safety margin. */
     linear-gradient(
       90deg,
-      rgba(14, 14, 14, 0.62) 0%,
-      rgba(14, 14, 14, 0.50) 25%,
-      rgba(14, 14, 14, 0.30) 50%,
+      rgba(14, 14, 14, 0.72) 0%,
+      rgba(14, 14, 14, 0.58) 25%,
+      rgba(14, 14, 14, 0.32) 50%,
       rgba(14, 14, 14, 0.10) 75%,
       rgba(14, 14, 14, 0.00) 100%
     ),
-    /* Bottom darken so the subtitle + CTA row stay legible over any frame. */
+    /* 3. Top + bottom darken for header logo + CTA row legibility. */
     linear-gradient(
       180deg,
-      rgba(14, 14, 14, 0.20) 0%,
-      transparent 35%,
-      transparent 60%,
-      rgba(14, 14, 14, 0.35) 100%
+      rgba(14, 14, 14, 0.18) 0%,
+      transparent 25%,
+      transparent 65%,
+      rgba(14, 14, 14, 0.40) 100%
     );
 }
 
