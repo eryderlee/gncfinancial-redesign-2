@@ -75,9 +75,17 @@ const isHome = currentPath === '/';
   </div>
 </header>
 
-<!-- Mobile menu overlay — kept OUTSIDE <header> because the home-page header
-     uses backdrop-filter, which creates a containing block for fixed-position
-     descendants and would shrink this overlay to the header's bounds. -->
+<!-- Backdrop scrim behind the drawer — tappable to dismiss. Kept OUTSIDE
+     <header> for the same reason as the drawer below. -->
+<div
+  id="mobile-menu-backdrop"
+  class="mobile-menu-backdrop md:hidden"
+  aria-hidden="true"
+></div>
+
+<!-- Mobile menu drawer — kept OUTSIDE <header> because the header uses
+     backdrop-filter, which creates a containing block for fixed-position
+     descendants and would shrink this drawer to the header's bounds. -->
 <div
   id="mobile-menu"
   class="mobile-menu-overlay md:hidden"
@@ -122,10 +130,11 @@ const isHome = currentPath === '/';
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
     const closeBtn = document.getElementById('mobile-menu-close');
-    const header = document.getElementById('site-header');
+    const backdrop = document.getElementById('mobile-menu-backdrop');
 
     function openMenu() {
       menu?.classList.add('mobile-menu-open');
+      backdrop?.classList.add('mobile-menu-open');
       menu?.setAttribute('aria-hidden', 'false');
       btn?.setAttribute('aria-expanded', 'true');
       document.body.style.overflow = 'hidden';
@@ -133,6 +142,7 @@ const isHome = currentPath === '/';
 
     function closeMenu() {
       menu?.classList.remove('mobile-menu-open');
+      backdrop?.classList.remove('mobile-menu-open');
       menu?.setAttribute('aria-hidden', 'true');
       btn?.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
@@ -140,6 +150,7 @@ const isHome = currentPath === '/';
 
     btn?.addEventListener('click', openMenu);
     closeBtn?.addEventListener('click', closeMenu);
+    backdrop?.addEventListener('click', closeMenu);
     menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
   }
 

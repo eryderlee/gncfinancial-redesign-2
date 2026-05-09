@@ -379,30 +379,102 @@ body::after {
 }
 
 /* ============================================
+   PAGE HERO — used on inner pages (about/services/contact/insights).
+   Cream surface so the page header is bright (not dark like the home
+   hero), with a soft warm radial that ties to the brand and a barely-
+   visible dot grid for depth. Designed to be PLACED above light sections
+   without a colour clash. */
+.page-hero {
+  position: relative;
+  background-color: var(--color-surface-50);
+  background-image:
+    /* Warm radial echoing the home hero's "light through curtain" — placed
+       on the right so the headline area on the left stays clean. */
+    radial-gradient(
+      ellipse 65% 110% at 92% 45%,
+      rgba(232, 128, 26, 0.13) 0%,
+      rgba(232, 128, 26, 0.05) 35%,
+      transparent 70%
+    ),
+    /* Very gentle warm wash from the top — softens the boundary with the
+       header above it. */
+    linear-gradient(
+      180deg,
+      rgba(232, 128, 26, 0.045) 0%,
+      transparent 35%
+    );
+  overflow: hidden;
+}
+
+/* Dot grid texture — barely visible but adds real depth */
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    rgba(14, 14, 14, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+  pointer-events: none;
+  z-index: 0;
+}
+.page-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Small accent eyebrow above headlines on inner pages — orange line +
+   small caps label, editorial feel. */
+.page-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent-600);
+  margin-bottom: 1rem;
+}
+.page-hero-eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 2px;
+  background-color: var(--color-accent-600);
+  display: inline-block;
+}
+
+/* ============================================
    BOTTOM CTA — pure CSS, no video. Three layered light sources on a
    dark warm base, plus a subtle dot grid for depth. Symmetric by
    construction, so the brightness is uniform across the section.
    ============================================ */
 .hero-cta-section {
-  background-color: var(--color-ink-900);
+  /* Warm-tinted dark — noticeably lighter than ink-900 (#0E0E0E) and with
+     a subtle brown undertone, so the section reads "warm dim" rather than
+     "pitch black". */
+  background-color: #221C16;
   background-image:
-    /* Soft ambient warmth pouring down from the top edge */
+    /* Top ambient warmth — bumped from 10% → 16% so the section has more
+       overall lift, less "hole" feel. */
     radial-gradient(
-      ellipse 90% 60% at 50% 0%,
-      rgba(232, 128, 26, 0.10) 0%,
+      ellipse 100% 70% at 50% 0%,
+      rgba(232, 128, 26, 0.16) 0%,
       transparent 65%
     ),
-    /* Subtle warm hint at the bottom edge — anchors the section */
+    /* Bottom anchor — bumped from 6% → 12% */
     radial-gradient(
-      ellipse 70% 50% at 50% 100%,
-      rgba(232, 128, 26, 0.06) 0%,
+      ellipse 80% 55% at 50% 100%,
+      rgba(232, 128, 26, 0.12) 0%,
       transparent 60%
     ),
-    /* Strong warm halo centred behind the CTA button — makes the orange
-       button feel like it's blooming out of the surrounding warmth. */
+    /* Strong warm halo behind the CTA button — KEPT at full strength so
+       the button's bloom-from-warmth moment still lands. */
     radial-gradient(
       ellipse 45% 65% at 50% 60%,
-      rgba(232, 128, 26, 0.22) 0%,
+      rgba(232, 128, 26, 0.24) 0%,
       rgba(232, 128, 26, 0.08) 40%,
       transparent 75%
     );
@@ -1361,28 +1433,73 @@ body::after {
 }
 
 /* ============================================
-   MOBILE MENU OVERLAY — guaranteed solid bg
+   MOBILE MENU — side drawer + backdrop scrim
    ============================================ */
 
+/* Backdrop scrim covers the rest of the page behind the drawer.
+   Tappable so users can dismiss the drawer by tapping outside. */
+.mobile-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(14, 14, 14, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 300ms cubic-bezier(0.32, 0.72, 0.27, 1),
+    visibility 0s 300ms;
+}
+.mobile-menu-backdrop.mobile-menu-open {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 300ms cubic-bezier(0.32, 0.72, 0.27, 1),
+    visibility 0s 0s;
+}
+
+/* Drawer itself: anchored to the right edge, slides in from outside. */
 .mobile-menu-overlay {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
-  left: 0;
+  /* Constrained width — feels like a drawer, not a full takeover */
+  width: min(85vw, 360px);
   z-index: 100;
   background-color: #0E0E0E;
   background-image:
-    radial-gradient(ellipse at 20% 30%, rgba(232, 128, 26, 0.20) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 70%, rgba(232, 128, 26, 0.12) 0%, transparent 50%);
+    radial-gradient(ellipse at 30% 20%, rgba(232, 128, 26, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 90%, rgba(232, 128, 26, 0.12) 0%, transparent 55%);
+  /* Subtle left edge highlight where the drawer meets the backdrop */
+  box-shadow:
+    -24px 0 60px -12px rgba(0, 0, 0, 0.6),
+    inset 1px 0 0 rgba(255, 255, 255, 0.04);
   transform: translateX(100%);
-  transition: transform 300ms cubic-bezier(0.32, 0.72, 0.27, 1);
+  transition: transform 350ms cubic-bezier(0.32, 0.72, 0.27, 1);
   visibility: hidden;
+  /* Allow scrolling inside the drawer if menu is taller than viewport */
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .mobile-menu-overlay.mobile-menu-open {
   transform: translateX(0);
   visibility: visible;
+}
+
+/* Tighter mobile-menu inner layout — drawer is narrower than full screen */
+.mobile-menu-overlay nav {
+  align-items: flex-start;
+  padding: 0 1.6rem;
+  gap: 1.4rem;
+  padding-top: 2.5rem;
+}
+.mobile-menu-overlay nav a {
+  font-size: 1.5rem;
+  text-align: left;
+  width: 100%;
 }
 
 /* ============================================
