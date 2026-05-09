@@ -860,8 +860,96 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
       </div>
     </div>
   </section>
+  <!-- Hero background switcher — preview UI for testing the four hero
+       options (curtain video / eucalypt / hills / valley). Click to
+       cycle. URL updates so links can be shared. -->
+  <button id="hero-bg-switcher" class="hero-bg-switcher" type="button" aria-label="Switch hero background">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 12a9 9 0 0 0-15-6.7L3 8"/><path d="M3 3v5h5"/>
+      <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/><path d="M16 16h5v5"/>
+    </svg>
+    <span>Switch &mdash; <span class="hero-bg-switcher-label">Curtain</span></span>
+  </button>
+
   </div>
   <!-- =====  SCROLL-LINE WRAPPER END  ===== -->
 </Page>
 
 <!-- Animations handled by shared Animations.astro component -->
+
+<!-- Hero background switcher logic: cycles through 4 options on button
+     click and via the ?hero= URL param. Curtain restores the video; the
+     other options swap to the static poster of the selected image. -->
+<script is:inline>
+  (function() {
+    const OPTIONS = ['curtain', 'eucalypt', 'hills', 'valley'];
+    const POSTER_MAP = {
+      curtain: '/hero/poster.jpg',
+      eucalypt: '/hero/poster-eucalypt.jpg',
+      hills: '/hero/poster-hills.jpg',
+      valley: '/hero/poster-valley.jpg',
+    };
+    const LABELS = {
+      curtain: 'Curtain',
+      eucalypt: 'Eucalypt',
+      hills: 'Hills',
+      valley: 'Valley',
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    let current = params.get('hero') || 'curtain';
+    if (OPTIONS.indexOf(current) === -1) current = 'curtain';
+
+    function apply(option) {
+      const isCurtain = option === 'curtain';
+      const src = POSTER_MAP[option];
+
+      const heroBg = document.querySelector('.hero-video-bg');
+      const heroPoster = document.querySelector('.hero-video-poster');
+      if (heroBg) heroBg.style.display = isCurtain ? '' : 'none';
+      if (heroPoster) {
+        heroPoster.src = src;
+        heroPoster.style.display = isCurtain ? '' : 'block';
+      }
+
+      const bleedBg = document.querySelector('.hero-bleed-video');
+      const bleedPoster = document.querySelector('.hero-bleed-poster');
+      if (bleedBg) bleedBg.style.display = isCurtain ? '' : 'none';
+      if (bleedPoster) {
+        bleedPoster.src = src;
+        bleedPoster.style.display = isCurtain ? '' : 'block';
+      }
+
+      const label = document.querySelector('.hero-bg-switcher-label');
+      if (label) label.textContent = LABELS[option];
+
+      const url = new URL(window.location.href);
+      if (isCurtain) url.searchParams.delete('hero');
+      else url.searchParams.set('hero', option);
+      history.replaceState({}, '', url);
+    }
+
+    function next() {
+      const idx = OPTIONS.indexOf(current);
+      current = OPTIONS[(idx + 1) % OPTIONS.length];
+      const btn = document.getElementById('hero-bg-switcher');
+      if (btn) {
+        btn.classList.add('is-cycling');
+        setTimeout(function() { btn.classList.remove('is-cycling'); }, 500);
+      }
+      apply(current);
+    }
+
+    function init() {
+      apply(current);
+      const btn = document.getElementById('hero-bg-switcher');
+      if (btn) btn.addEventListener('click', next);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
