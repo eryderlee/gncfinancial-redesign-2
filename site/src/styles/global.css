@@ -298,6 +298,8 @@
 /* On mobile the divider gets hidden — the wrap separates groups */
 @media (max-width: 640px) {
   .trust-strip-divider { display: none; }
+  .trust-strip-logos { gap: 1rem 1.4rem; }
+  .trust-strip-logos img { height: 32px; }
 }
 
 /* ============================================
@@ -549,6 +551,27 @@ body::after {
       transparent 65%,
       rgba(14, 14, 14, 0.40) 100%
     );
+}
+
+/* Mobile: stack a deeper navy-blue tint over the full hero so the
+   headline and sub-copy stay legible against busy poster imagery,
+   where the left-to-right gradient (designed for desktop) leaves the
+   right edge too bright. */
+@media (max-width: 768px) {
+  .hero-video-overlay {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(20, 38, 84, 0.55) 0%,
+        rgba(20, 38, 84, 0.45) 100%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(14, 14, 14, 0.45) 0%,
+        rgba(14, 14, 14, 0.30) 50%,
+        rgba(14, 14, 14, 0.55) 100%
+      );
+  }
 }
 
 /* Lift every direct content child above the video + overlay. Bg layers,
