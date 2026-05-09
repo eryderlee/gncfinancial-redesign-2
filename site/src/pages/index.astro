@@ -953,7 +953,7 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
       'adviser-meeting': 'Adviser meeting',
       laughing: 'Laughing',
       review: 'Reviewing',
-      listening: 'Listening',
+      listening: 'Listening (video)',
       welcome: 'Welcome',
       report: 'Reading report',
       unsplash: 'Unsplash ref',
@@ -962,36 +962,64 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
       'recolor-3': 'Recolour 3',
       'recolor-4': 'Recolour 4',
     };
+    // Options that have a full video (not just a still poster). When the
+    // user selects these, the script swaps the video sources AND shows the
+    // video element. Other options just show the static poster img.
+    const VIDEO_MAP = {
+      curtain: { webm: '/hero/hero.webm', mp4: '/hero/hero.mp4' },
+      listening: { webm: '/hero/hero-listening.webm', mp4: '/hero/hero-listening.mp4' },
+    };
 
     const params = new URLSearchParams(window.location.search);
     let current = params.get('hero') || 'curtain';
     if (OPTIONS.indexOf(current) === -1) current = 'curtain';
 
+    function setVideoSources(videoEl, urls, posterUrl) {
+      if (!videoEl) return;
+      const sources = videoEl.querySelectorAll('source');
+      if (sources[0]) sources[0].src = urls.webm;
+      if (sources[1]) sources[1].src = urls.mp4;
+      if (posterUrl) videoEl.setAttribute('poster', posterUrl);
+      videoEl.load();
+    }
+
     function apply(option) {
-      const isCurtain = option === 'curtain';
-      const src = POSTER_MAP[option];
+      const videoUrls = VIDEO_MAP[option];
+      const posterSrc = POSTER_MAP[option];
+      const hasVideo = !!videoUrls;
 
       const heroBg = document.querySelector('.hero-video-bg');
       const heroPoster = document.querySelector('.hero-video-poster');
-      if (heroBg) heroBg.style.display = isCurtain ? '' : 'none';
-      if (heroPoster) {
-        heroPoster.src = src;
-        heroPoster.style.display = isCurtain ? '' : 'block';
-      }
-
       const bleedBg = document.querySelector('.hero-bleed-video');
       const bleedPoster = document.querySelector('.hero-bleed-poster');
-      if (bleedBg) bleedBg.style.display = isCurtain ? '' : 'none';
-      if (bleedPoster) {
-        bleedPoster.src = src;
-        bleedPoster.style.display = isCurtain ? '' : 'block';
+
+      if (hasVideo) {
+        // Swap video sources for both hero bg and bleed; show the video
+        setVideoSources(heroBg, videoUrls, posterSrc);
+        setVideoSources(bleedBg, videoUrls, posterSrc);
+        if (heroBg) heroBg.style.display = '';
+        if (bleedBg) bleedBg.style.display = '';
+        // Reset poster img to CSS default (hidden on desktop, visible on mobile)
+        if (heroPoster) heroPoster.style.display = '';
+        if (bleedPoster) bleedPoster.style.display = '';
+      } else {
+        // Still-only: hide videos, force poster img on
+        if (heroBg) heroBg.style.display = 'none';
+        if (bleedBg) bleedBg.style.display = 'none';
+        if (heroPoster) heroPoster.style.display = 'block';
+        if (bleedPoster) bleedPoster.style.display = 'block';
       }
+
+      // Update poster src on every change (used as bg fallback when video
+      // hasn't loaded yet, and as the actual visible image for still-only).
+      if (heroPoster) heroPoster.src = posterSrc;
+      if (bleedPoster) bleedPoster.src = posterSrc;
 
       const label = document.querySelector('.hero-bg-switcher-label');
       if (label) label.textContent = LABELS[option];
 
       const url = new URL(window.location.href);
-      if (isCurtain) url.searchParams.delete('hero');
+      if (option === 'curtain') url.searchParams.delete('hero');
       else url.searchParams.set('hero', option);
       history.replaceState({}, '', url);
     }
