@@ -45,6 +45,33 @@
     z-index: 1;
     opacity: 0;
     transition: opacity 0.6s ease-out;
+
+    /* Dim the line where it traverses the credo (Down-to-earth) section,
+       then ramp to full alpha at the credo → services boundary. Both
+       CSS variables are set per-frame by the scroll-line script:
+         --scroll-line-fade-end: percentage of the wrapper height where
+                                 the credo section ends (defaults to 0%
+                                 + alpha 1 → no visible dimming).
+         --scroll-line-fade-alpha: alpha of the dim portion (0–1). */
+    --scroll-line-fade-end: 0%;
+    --scroll-line-fade-alpha: 1;
+    --scroll-line-fade-ramp: 4%;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, var(--scroll-line-fade-alpha)) 0%,
+      rgba(0, 0, 0, var(--scroll-line-fade-alpha))
+        calc(var(--scroll-line-fade-end) - var(--scroll-line-fade-ramp)),
+      rgba(0, 0, 0, 1) calc(var(--scroll-line-fade-end) + var(--scroll-line-fade-ramp)),
+      rgba(0, 0, 0, 1) 100%
+    );
+            mask-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, var(--scroll-line-fade-alpha)) 0%,
+      rgba(0, 0, 0, var(--scroll-line-fade-alpha))
+        calc(var(--scroll-line-fade-end) - var(--scroll-line-fade-ramp)),
+      rgba(0, 0, 0, 1) calc(var(--scroll-line-fade-end) + var(--scroll-line-fade-ramp)),
+      rgba(0, 0, 0, 1) 100%
+    );
   }
   .scroll-line.is-ready { opacity: 1; }
 
@@ -191,12 +218,33 @@
       }
     }
 
+    function updateFadeRegion(wRect: DOMRect) {
+      // Find the section the line should be dimmed through (the credo).
+      // We re-query each frame because the section may not exist yet on
+      // first measure (e.g. during layout settle on slow devices).
+      if (!wrapper) return;
+      const fadeEl = document.querySelector<HTMLElement>("[data-scroll-line-fade-end]");
+      if (!fadeEl || wRect.height <= 0) {
+        wrapper.style.setProperty("--scroll-line-fade-end", "0%");
+        wrapper.style.setProperty("--scroll-line-fade-alpha", "1");
+        return;
+      }
+      const fadeRect = fadeEl.getBoundingClientRect();
+      const fadeEndY = fadeRect.bottom - wRect.top;
+      const pct = Math.max(0, Math.min(100, (fadeEndY / wRect.height) * 100));
+      wrapper.style.setProperty("--scroll-line-fade-end", `${pct}%`);
+      // 0.4 was chosen by eye — dim enough to read as natural over the
+      // cream credo bg, bright enough to still trace the line.
+      wrapper.style.setProperty("--scroll-line-fade-alpha", "0.4");
+    }
+
     function update() {
       if (!target || !wrapper) return;
 
       const wRect = wrapper.getBoundingClientRect();
       const tRect = target.getBoundingClientRect();
       const sRect = source ? source.getBoundingClientRect() : null;
+      updateFadeRegion(wRect);
 
       // Walk up from the dot to the wrapper, summing transform offsets so we
       // can subtract any in-flight reveal animation translation.

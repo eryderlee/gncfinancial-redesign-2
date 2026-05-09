@@ -817,7 +817,7 @@ body::after {
   color: var(--color-muted-400);
   white-space: nowrap;
   user-select: none;
-  transition: color 0.3s ease, font-weight 0.3s ease;
+  transition: color 0.3s ease, font-weight 0.3s ease, opacity 0.3s ease;
 }
 .ridge-label:hover {
   color: var(--color-ink-700);
@@ -825,6 +825,23 @@ body::after {
 .ridge-label.is-active {
   color: var(--color-ink-900);
   font-weight: 600;
+}
+
+/* Mobile: dates would overlap if all 8 are shown across the viewport, so
+   show only the active one — it fades in/out as the user scrubs. */
+@media (max-width: 767px) {
+  .ridge-label {
+    opacity: 0;
+    pointer-events: none;
+    /* Center the active label under the peak instead of using its
+       computed left% position, so the lone visible label always sits
+       in the middle of the rail rather than skating to the edges. */
+    left: 50% !important;
+  }
+  .ridge-label.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
