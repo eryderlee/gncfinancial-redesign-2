@@ -29,6 +29,15 @@ const fullTitle = `${title} — GNC Financial · Hills District Accountants`;
     <meta property="og:locale" content="en_AU" />
     <ClientRouter />
     <slot name="head" />
+    <!-- Apply persisted theme before paint to avoid colour flash on load -->
+    <script is:inline>
+      (function() {
+        try {
+          var t = localStorage.getItem('gnc-theme');
+          if (t === 'ported') document.documentElement.setAttribute('data-theme', 'ported');
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body class="min-h-screen flex flex-col">
     <!-- Reading progress bar -->

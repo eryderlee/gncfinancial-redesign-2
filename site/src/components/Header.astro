@@ -22,7 +22,14 @@ const isHome = currentPath === '/';
         alt="GNC Financial"
         width="180"
         height="40"
-        class="h-9 md:h-10 w-auto transition-all duration-300"
+        class="site-logo-default h-11 md:h-14 w-auto transition-all duration-300"
+      />
+      <img
+        src="/logo-ported.png"
+        alt="GNC Financial"
+        width="180"
+        height="40"
+        class="site-logo-ported h-11 md:h-14 w-auto transition-all duration-300"
       />
     </a>
 
@@ -61,6 +68,18 @@ const isHome = currentPath === '/';
         <span>Book a call</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="site-nav-cta-arrow shrink-0" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
       </a>
+
+      <!-- Theme toggle (compare current vs ported palette) -->
+      <button
+        type="button"
+        id="theme-toggle"
+        class="theme-toggle"
+        aria-label="Toggle theme"
+        title="Toggle colour theme"
+      >
+        <span class="theme-toggle-swatch theme-toggle-swatch-1" aria-hidden="true"></span>
+        <span class="theme-toggle-swatch theme-toggle-swatch-2" aria-hidden="true"></span>
+      </button>
     </div>
 
     <!-- Mobile menu button -->
@@ -152,6 +171,22 @@ const isHome = currentPath === '/';
     closeBtn?.addEventListener('click', closeMenu);
     backdrop?.addEventListener('click', closeMenu);
     menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+
+    // Theme toggle: cycles between 'default' and 'ported' colour palettes.
+    // State stored in localStorage so it persists across pages + reloads.
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const current = document.documentElement.dataset.theme || 'default';
+        const next = current === 'ported' ? 'default' : 'ported';
+        if (next === 'default') {
+          document.documentElement.removeAttribute('data-theme');
+        } else {
+          document.documentElement.setAttribute('data-theme', next);
+        }
+        try { localStorage.setItem('gnc-theme', next); } catch (e) {}
+      });
+    }
   }
 
   document.addEventListener('astro:page-load', initHeader);

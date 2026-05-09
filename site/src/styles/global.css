@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "@fontsource-variable/fraunces";
 @import "@fontsource-variable/inter";
+@import "@fontsource-variable/lora";
+@import "@fontsource/playfair-display";
+@import "@fontsource/playfair-display/600.css";
+@import "@fontsource/playfair-display/700.css";
 
 @theme {
   /* Ink ramp */
@@ -61,6 +65,338 @@
 
   /* Container */
   --container-max-width: 1200px;
+}
+
+/* ============================================
+   PORTED THEME — colour palette ported from
+   gncfinancial.netlify.app for A/B comparison.
+   Toggled via [data-theme="ported"] on <html>.
+   ============================================ */
+
+[data-theme="ported"] {
+  /* Accent: orange → antique gold (#c8933a brand) */
+  --color-accent-50:  #FBF4E6;
+  --color-accent-100: #F5E7C5;
+  --color-accent-200: #EBD098;
+  --color-accent-300: #E8B55A;
+  --color-accent-400: #DEA853;
+  --color-accent-500: #D6A44B;
+  --color-accent-600: #C8933A;
+  --color-accent-700: #A87928;
+  --color-accent-800: #885F1C;
+  --color-accent-900: #5E4112;
+  --color-accent-950: #3D2A0B;
+
+  /* Ink: warm-dark → navy-charcoal (deep navy primary) */
+  --color-ink-50:  #F7FAFC;
+  --color-ink-100: #EDF2F7;
+  --color-ink-200: #E2E8F0;
+  --color-ink-300: #CBD5E0;
+  --color-ink-400: #A0AEC0;
+  --color-ink-500: #718096;
+  --color-ink-600: #4A5568;
+  --color-ink-700: #2D3748;
+  --color-ink-800: #243575;
+  --color-ink-900: #1A2B5E;
+  --color-ink-950: #111D44;
+
+  /* Surface: warm cream → cool off-white */
+  --color-surface-50:  #FFFFFF;
+  --color-surface-100: #F7F8FC;
+  --color-surface-200: #F7F8FC;
+  --color-surface-300: #E2E8F0;
+  --color-surface-400: #CBD5E0;
+  --color-surface-500: #A0AEC0;
+
+  /* Muted ramp: warm grey → cool grey */
+  --color-muted-50:  #F7FAFC;
+  --color-muted-100: #EDF2F7;
+  --color-muted-200: #E2E8F0;
+  --color-muted-300: #CBD5E0;
+  --color-muted-400: #A0AEC0;
+  --color-muted-500: #718096;
+  --color-muted-600: #4A5568;
+  --color-muted-700: #2D3748;
+  --color-muted-800: #1A2B5E;
+  --color-muted-900: #111D44;
+
+  /* Display font swap: Fraunces → Playfair Display feel.
+     Falls back to Georgia if Playfair isn't loaded. */
+  --font-display: "Playfair Display", Georgia, serif;
+}
+
+/* Logo swap: when ported theme is active, hide the default logo and
+   show the ported one. Both <img> tags ship in the markup; only one
+   is visible at a time via display:none. */
+.site-logo-ported { display: none; }
+[data-theme="ported"] .site-logo-default { display: none; }
+[data-theme="ported"] .site-logo-ported { display: block; }
+
+/* Ported-theme nav: matches the netlify site's navy header. The gold
+   alternate logo and white nav links are designed for this dark bg. */
+[data-theme="ported"] #site-header {
+  background: rgba(26, 43, 94, 0.95);  /* netlify --navy */
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+[data-theme="ported"] .site-nav-link {
+  color: rgba(255, 255, 255, 0.85);
+}
+[data-theme="ported"] .site-nav-link:hover {
+  color: #fff;
+}
+[data-theme="ported"] .site-nav-link.site-nav-active {
+  color: #fff;
+  border-bottom-color: var(--color-accent-500);
+}
+[data-theme="ported"] .site-nav-phone {
+  color: rgba(255, 255, 255, 0.75);
+}
+[data-theme="ported"] .site-nav-phone:hover {
+  color: var(--color-accent-400);
+}
+[data-theme="ported"] .site-nav-menu-btn {
+  color: #fff;
+}
+/* Nav CTA in ported theme: gold pill on navy */
+[data-theme="ported"] .site-nav-cta {
+  color: var(--color-accent-300);
+  border-color: rgba(232, 181, 90, 0.45);
+  background: rgba(200, 147, 58, 0.12);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+[data-theme="ported"] .site-nav-cta:hover {
+  color: #fff;
+  background: var(--color-accent-600);
+  border-color: var(--color-accent-600);
+  box-shadow:
+    0 8px 22px -6px rgba(200, 147, 58, 0.55),
+    0 1px 2px rgba(0, 0, 0, 0.25);
+}
+/* Theme toggle on the navy header: lighter border + bg */
+[data-theme="ported"] .theme-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+[data-theme="ported"] .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Bottom CTA in ported theme: deep navy base with gold radial behind
+   the button. Mirrors the warm/orange treatment but in cool/gold tones
+   so the section closing matches the netlify-derived palette. */
+[data-theme="ported"] .hero-cta-section {
+  background-color: #11214B;
+  background-image:
+    /* Top ambient navy lift */
+    radial-gradient(
+      ellipse 100% 70% at 50% 0%,
+      rgba(36, 53, 117, 0.50) 0%,
+      transparent 65%
+    ),
+    /* Bottom anchor — soft gold hint */
+    radial-gradient(
+      ellipse 80% 55% at 50% 100%,
+      rgba(200, 147, 58, 0.10) 0%,
+      transparent 60%
+    ),
+    /* Strong gold halo centred behind the CTA button — same focal
+       moment as the orange version, just gold. */
+    radial-gradient(
+      ellipse 45% 65% at 50% 60%,
+      rgba(200, 147, 58, 0.26) 0%,
+      rgba(200, 147, 58, 0.08) 40%,
+      transparent 75%
+    );
+}
+
+/* Credo paragraph uses Lora ONLY in the ported (alt) theme — default
+   theme keeps Fraunces. */
+[data-theme="ported"] .credo-block p {
+  font-family: "Lora Variable", Georgia, serif;
+  max-width: 30rem;
+}
+
+/* ============================================
+   TRUST STRIP — home page (between credo + services)
+   ============================================ */
+/* Small editorial accent line above the trust strip — separates it
+   from the credo above without a heavy hr. Brand orange. */
+.trust-section-accent {
+  display: block;
+  width: 100%;
+  max-width: 800px;
+  height: 1px;
+  background: var(--color-surface-300);
+}
+
+.trust-strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .trust-strip {
+    flex-direction: row;
+    justify-content: center;
+    gap: 2.5rem;
+  }
+}
+.trust-strip-label {
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink-500);
+  flex-shrink: 0;
+}
+.trust-strip-logos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem 2rem;
+}
+.trust-strip-logos li {
+  display: inline-flex;
+  align-items: center;
+}
+.trust-strip-logos img {
+  height: 48px;
+  width: auto;
+  /* Keep full brand colours; subtle dim by default, full opacity on hover */
+  opacity: 0.85;
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+}
+.trust-strip-logos li:hover img {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+.trust-strip-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--color-surface-300);
+  margin: 0 0.4rem;
+  flex-shrink: 0;
+}
+/* On mobile the divider gets hidden — the wrap separates groups */
+@media (max-width: 640px) {
+  .trust-strip-divider { display: none; }
+}
+
+/* ============================================
+   CREDENTIALS — about page (dark section)
+   ============================================ */
+.credentials-group {
+  margin-bottom: 3rem;
+}
+.credentials-group:last-child {
+  margin-bottom: 0;
+}
+.credentials-label {
+  display: block;
+  font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent-400);
+  margin-bottom: 1.6rem;
+}
+.credentials-row {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2rem 3.5rem;
+}
+.credentials-row li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+}
+/* White rounded container so the original logo colours always read,
+   regardless of the section's dark bg. Premium "card" treatment. */
+.credentials-row li > img {
+  height: 56px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+  background: #fff;
+  padding: 0.85rem 1.1rem;
+  border-radius: 12px;
+  box-shadow:
+    0 8px 24px -10px rgba(0, 0, 0, 0.5),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+  /* Total height including padding: 56 + 1.7rem ≈ 84px */
+}
+.credentials-row li:hover > img {
+  transform: translateY(-3px);
+  box-shadow:
+    0 14px 32px -8px rgba(0, 0, 0, 0.55),
+    0 1px 2px rgba(0, 0, 0, 0.25);
+}
+.credentials-row-software li > img {
+  height: 36px;  /* software logos slightly smaller — supporting role */
+}
+.credentials-caption {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 500;
+}
+
+/* Backlight bleed in ported theme: solid navy fill instead of a
+   blurred video copy, so it cleanly matches the alt colour. */
+[data-theme="ported"] .hero-bleed {
+  background: linear-gradient(180deg, rgba(36, 53, 117, 0.65) 0%, rgba(36, 53, 117, 0) 100%);
+}
+[data-theme="ported"] .hero-bleed-video,
+[data-theme="ported"] .hero-bleed-poster {
+  display: none;
+}
+
+/* Hero overlay in ported theme: replace warm orange wash with navy
+   blue tint so the hero matches the rest of the ported palette. */
+[data-theme="ported"] .hero-video-overlay {
+  background:
+    /* 1. Navy wash — stronger than the default orange tint so the blue
+       cast reads clearly across the bright areas of the image. */
+    linear-gradient(
+      180deg,
+      rgba(26, 43, 94, 0.22) 0%,
+      rgba(26, 43, 94, 0.14) 100%
+    ),
+    /* 2. Same left-to-right darken (headline legibility) */
+    linear-gradient(
+      90deg,
+      rgba(14, 14, 14, 0.72) 0%,
+      rgba(14, 14, 14, 0.58) 25%,
+      rgba(14, 14, 14, 0.32) 50%,
+      rgba(14, 14, 14, 0.10) 75%,
+      rgba(14, 14, 14, 0.00) 100%
+    ),
+    /* 3. Same top + bottom darken (header logo + CTA row legibility) */
+    linear-gradient(
+      180deg,
+      rgba(14, 14, 14, 0.18) 0%,
+      transparent 25%,
+      transparent 65%,
+      rgba(14, 14, 14, 0.40) 100%
+    );
 }
 
 /* ============================================
@@ -1500,6 +1836,40 @@ body::after {
 .site-nav-cta:hover .site-nav-cta-arrow {
   transform: translateX(2px);
   opacity: 1;
+}
+
+/* Theme toggle button — two stacked colour swatches in a small pill,
+   sits at the right edge of the nav. Click to cycle theme. */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 1px solid rgba(14, 14, 14, 0.15);
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(14, 14, 14, 0.3);
+  transform: translateY(-1px);
+}
+.theme-toggle-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+/* Two swatches: current accent (orange) + ported accent (gold).
+   Hardcoded so they stay constant regardless of which theme is active —
+   they're showing what each theme LOOKS LIKE, not the active one. */
+.theme-toggle-swatch-1 {
+  background: #E8801A;  /* current orange */
+}
+.theme-toggle-swatch-2 {
+  background: #C8933A;  /* ported gold */
 }
 
 /* Mobile menu trigger */

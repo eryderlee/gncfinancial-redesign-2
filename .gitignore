@@ -29,5 +29,33 @@ Thumbs.db
 # Raw AI generation outputs (kept locally as workspace files; the
 # optimised versions live in site/public/hero/)
 /kling_*.mp4
+/*.mp4
 /Soft_light_*.jpeg
 /Soft_light_*.jpg
+/photo-*.jpg
+/reference.jpg
+/stock-compressed.jpg
+/alternate*.png
+/image.png_*.jpeg
+/Accountants_*.jpeg
+/Accounting_*.jpeg
+/Australian_*.jpeg
+/Boardroom_*.jpeg
+/Brushed-brass_*.jpeg
+/Coffee_cup_*.jpeg
+/Eucalypt_*.jpeg
+/Financial_adviser_*.jpeg
+/Man_*.jpeg
+/Modern_office_*.jpeg
+/Paper_ledger_*.jpeg
+/Quiet_accounting_*.jpeg
+/Reception_*.jpeg
+/Rolling_*.jpeg
+/Two_people_*.jpeg
+/Woman_*.jpeg
+# Credential / partner logos (raw versions; optimised in site/public/credentials/)
+/Chartered_Accountants_*.png
+/Logo_of_CPA_*.png
+/MYOB_*.png
+/Xero_*.svg
+/Intuit_QuickBooks_*.svg

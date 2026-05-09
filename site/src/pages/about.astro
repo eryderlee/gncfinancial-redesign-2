@@ -88,32 +88,45 @@ import Page from '../layouts/Page.astro';
   </section>
 
   <!-- ============================================
-       CREDENTIALS — dark section
+       CREDENTIALS — dark section, two groups
        ============================================ -->
   <section class="py-20 md:py-24 bg-ink-950">
     <div class="max-w-[1200px] mx-auto px-5 md:px-10 text-center">
-      <h2 class="font-display text-3xl md:text-4xl font-semibold text-white mb-12 reveal">Credentials & partnerships</h2>
-      <div class="flex flex-wrap justify-center gap-8 md:gap-12 reveal">
-        <div class="flex flex-col items-center gap-2">
-          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">IPA</div>
-          <span class="text-xs text-surface-500">Institute of Public<br />Accountants Member</span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">BAS</div>
-          <span class="text-xs text-surface-500">Registered<br />BAS Agent</span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">Xero</div>
-          <span class="text-xs text-surface-500">Xero Certified<br /><!-- TODO: Verify partner tier --></span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">MYOB</div>
-          <span class="text-xs text-surface-500">MYOB Partner<br /><!-- TODO: Verify partner tier --></span>
-        </div>
-        <div class="flex flex-col items-center gap-2">
-          <div class="w-16 h-16 bg-ink-900 border border-ink-700 rounded-lg flex items-center justify-center text-xs text-surface-400" data-placeholder="true">QBO</div>
-          <span class="text-xs text-surface-500">QuickBooks Online<br /><!-- TODO: Verify partner tier --></span>
-        </div>
+      <h2 class="font-display text-3xl md:text-4xl font-semibold text-white mb-3 reveal">Credentials &amp; partnerships</h2>
+      <p class="text-surface-300 mb-12 max-w-md mx-auto reveal">
+        Recognised by the profession, fluent in the tools your business already uses.
+      </p>
+
+      <div class="credentials-group reveal">
+        <span class="credentials-label">Professional Memberships</span>
+        <ul class="credentials-row">
+          <li>
+            <img src="/credentials/ca-anz.png" alt="Chartered Accountants Australia and New Zealand" loading="lazy" decoding="async" />
+            <span class="credentials-caption">Chartered Accountants ANZ</span>
+          </li>
+          <li>
+            <img src="/credentials/cpa-australia.png" alt="CPA Australia" loading="lazy" decoding="async" />
+            <span class="credentials-caption">CPA Australia</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="credentials-group reveal">
+        <span class="credentials-label">Software Partners</span>
+        <ul class="credentials-row credentials-row-software">
+          <li>
+            <img src="/credentials/xero.svg" alt="Xero" loading="lazy" decoding="async" />
+            <span class="credentials-caption">Xero</span>
+          </li>
+          <li>
+            <img src="/credentials/myob.png" alt="MYOB" loading="lazy" decoding="async" />
+            <span class="credentials-caption">MYOB</span>
+          </li>
+          <li>
+            <img src="/credentials/quickbooks.svg" alt="QuickBooks" loading="lazy" decoding="async" />
+            <span class="credentials-caption">QuickBooks</span>
+          </li>
+        </ul>
       </div>
     </div>
   </section>

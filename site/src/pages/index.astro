@@ -202,7 +202,7 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
                        Recommended: 1920x1080, ~150-250KB JPG
        ============================================ -->
   <section class="hero-video hero-anchor relative min-h-[calc(100svh-4rem)] md:min-h-[calc(100svh-5rem)] flex items-center pt-16 pb-20 md:pt-20 md:pb-28">
-    <!-- Background video (desktop/tablet only) -->
+    <!-- Background video (desktop/tablet only) — defaults to listening -->
     <video
       class="hero-video-bg"
       autoplay
@@ -210,16 +210,16 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
       loop
       playsinline
       preload="metadata"
-      poster="/hero/poster.jpg"
+      poster="/hero/poster-listening.jpg"
       aria-hidden="true"
     >
-      <source src="/hero/hero.webm" type="video/webm" />
-      <source src="/hero/hero.mp4" type="video/mp4" />
+      <source src="/hero/hero-listening.webm" type="video/webm" />
+      <source src="/hero/hero-listening.mp4" type="video/mp4" />
     </video>
     <!-- Static poster (mobile + prefers-reduced-motion) -->
     <img
       class="hero-video-poster"
-      src="/hero/poster.jpg"
+      src="/hero/poster-listening.jpg"
       alt=""
       aria-hidden="true"
       loading="eager"
@@ -310,7 +310,7 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
        CREDO — centered, with orange dot anchor
        (line starts here; ends at the booking button)
        ============================================ -->
-  <section class="py-20 md:py-28 bg-surface-50 relative overflow-hidden" data-scroll-line-fade-end>
+  <section class="pt-20 pb-8 md:pt-28 md:pb-10 bg-surface-50 relative overflow-hidden" data-scroll-line-fade-end>
     <!-- Subtle dot grid -->
     <div class="absolute inset-0 opacity-[0.035] pointer-events-none" style="background-image: radial-gradient(circle, #0E0E0E 1px, transparent 1px); background-size: 24px 24px;"></div>
     <!-- Dynamic backlight bleed from hero — a heavily-blurred copy of the
@@ -322,10 +322,10 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
         autoplay muted loop playsinline preload="metadata"
         aria-hidden="true"
       >
-        <source src="/hero/hero.webm" type="video/webm" />
-        <source src="/hero/hero.mp4" type="video/mp4" />
+        <source src="/hero/hero-listening.webm" type="video/webm" />
+        <source src="/hero/hero-listening.mp4" type="video/mp4" />
       </video>
-      <img class="hero-bleed-poster" src="/hero/poster.jpg" alt="" aria-hidden="true" />
+      <img class="hero-bleed-poster" src="/hero/poster-listening.jpg" alt="" aria-hidden="true" />
     </div>
     <div class="max-w-[1200px] mx-auto px-5 md:px-10 text-center relative">
       <div class="reveal credo-block">
@@ -354,6 +354,30 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
           </span>
           helping Hills District businesses and families get&nbsp;ahead.
         </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TRUST STRIP — accreditations + software partners.
+       Same cream bg as the credo above; small accent divider on top
+       separates it from the credo section visually.
+       ============================================ -->
+  <section class="bg-surface-50 pt-12 md:pt-16 pb-8">
+    <div class="max-w-[1200px] mx-auto px-5 md:px-10">
+      <div class="flex flex-col items-center gap-8 reveal">
+        <span class="trust-section-accent" aria-hidden="true"></span>
+        <div class="trust-strip">
+          <span class="trust-strip-label">Accredited &amp; Connected</span>
+          <ul class="trust-strip-logos" aria-label="Memberships and software partners">
+            <li><img src="/credentials/ca-anz.png" alt="Chartered Accountants Australia and New Zealand" loading="lazy" decoding="async" /></li>
+            <li><img src="/credentials/cpa-australia.png" alt="CPA Australia" loading="lazy" decoding="async" /></li>
+            <li class="trust-strip-divider" aria-hidden="true"></li>
+            <li><img src="/credentials/xero.svg" alt="Xero" loading="lazy" decoding="async" /></li>
+            <li><img src="/credentials/myob.png" alt="MYOB" loading="lazy" decoding="async" /></li>
+            <li><img src="/credentials/quickbooks.svg" alt="QuickBooks" loading="lazy" decoding="async" /></li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -882,8 +906,8 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
 <script is:inline>
   (function() {
     const OPTIONS = [
-      'curtain',
       'listening',
+      'curtain',
       'adviser-meeting',
       'eucalypt',
       'hills',
@@ -971,8 +995,8 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
     };
 
     const params = new URLSearchParams(window.location.search);
-    let current = params.get('hero') || 'curtain';
-    if (OPTIONS.indexOf(current) === -1) current = 'curtain';
+    let current = params.get('hero') || 'listening';
+    if (OPTIONS.indexOf(current) === -1) current = 'listening';
 
     function setVideoSources(videoEl, urls, posterUrl) {
       if (!videoEl) return;
@@ -1019,7 +1043,7 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
       if (label) label.textContent = LABELS[option];
 
       const url = new URL(window.location.href);
-      if (option === 'curtain') url.searchParams.delete('hero');
+      if (option === 'listening') url.searchParams.delete('hero');
       else url.searchParams.set('hero', option);
       history.replaceState({}, '', url);
     }
