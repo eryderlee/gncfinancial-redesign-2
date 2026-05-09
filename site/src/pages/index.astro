@@ -876,23 +876,58 @@ const ridgeBars = Array.from({ length: insights.length * RIDGE_STRIDE }, (_, i) 
 
 <!-- Animations handled by shared Animations.astro component -->
 
-<!-- Hero background switcher logic: cycles through 4 options on button
+<!-- Hero background switcher logic: cycles through all options on button
      click and via the ?hero= URL param. Curtain restores the video; the
      other options swap to the static poster of the selected image. -->
 <script is:inline>
   (function() {
-    const OPTIONS = ['curtain', 'eucalypt', 'hills', 'valley'];
+    const OPTIONS = [
+      'curtain',
+      'eucalypt',
+      'hills',
+      'valley',
+      'boardroom',
+      'reception',
+      'building',
+      'dusk-office',
+      'brass',
+      'corridor',
+      'quiet-office',
+      'ledger',
+      'coffee',
+      'meeting',
+    ];
     const POSTER_MAP = {
       curtain: '/hero/poster.jpg',
       eucalypt: '/hero/poster-eucalypt.jpg',
       hills: '/hero/poster-hills.jpg',
       valley: '/hero/poster-valley.jpg',
+      boardroom: '/hero/poster-boardroom.jpg',
+      reception: '/hero/poster-reception.jpg',
+      building: '/hero/poster-building.jpg',
+      'dusk-office': '/hero/poster-dusk-office.jpg',
+      brass: '/hero/poster-brass.jpg',
+      corridor: '/hero/poster-corridor.jpg',
+      'quiet-office': '/hero/poster-quiet-office.jpg',
+      ledger: '/hero/poster-ledger.jpg',
+      coffee: '/hero/poster-coffee.jpg',
+      meeting: '/hero/poster-meeting.jpg',
     };
     const LABELS = {
       curtain: 'Curtain',
       eucalypt: 'Eucalypt',
       hills: 'Hills',
       valley: 'Valley',
+      boardroom: 'Boardroom',
+      reception: 'Reception',
+      building: 'Building',
+      'dusk-office': 'Dusk office',
+      brass: 'Brass detail',
+      corridor: 'Corridor',
+      'quiet-office': 'Quiet office',
+      ledger: 'Ledger',
+      coffee: 'Coffee',
+      meeting: 'Meeting',
     };
 
     const params = new URLSearchParams(window.location.search);
