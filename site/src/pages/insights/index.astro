@@ -101,7 +101,7 @@ const posts = [
             <time class="block text-xs text-muted-500 mb-2" datetime={post.date}>
               {new Date(post.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' })}
             </time>
-            <h2 class="font-display text-lg font-medium text-ink-800 mb-2 group-hover:text-accent-700 transition-colors duration-150 leading-snug">
+            <h2 class="font-display text-lg font-semibold text-ink-800 mb-2 group-hover:text-accent-700 transition-colors duration-150 leading-snug">
               {post.title}
             </h2>
             <p class="text-sm text-ink-500 leading-relaxed mb-4">{post.excerpt}</p>

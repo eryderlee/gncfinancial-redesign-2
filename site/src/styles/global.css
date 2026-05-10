@@ -366,7 +366,7 @@
 }
 [data-theme="ported"] .hero-bleed-video,
 [data-theme="ported"] .hero-bleed-poster {
-  display: none;
+  display: none !important;
 }
 
 /* Hero overlay in ported theme: replace warm orange wash with navy
@@ -380,13 +380,15 @@
       rgba(26, 43, 94, 0.22) 0%,
       rgba(26, 43, 94, 0.14) 100%
     ),
-    /* 2. Same left-to-right darken (headline legibility) */
+    /* 2. Stronger left-to-right darken — navy theme needs more contrast
+       behind the white headline since busy unsplash bg + navy tint
+       reduces the existing dark wash. */
     linear-gradient(
       90deg,
-      rgba(14, 14, 14, 0.72) 0%,
-      rgba(14, 14, 14, 0.58) 25%,
-      rgba(14, 14, 14, 0.32) 50%,
-      rgba(14, 14, 14, 0.10) 75%,
+      rgba(14, 14, 14, 0.85) 0%,
+      rgba(14, 14, 14, 0.70) 25%,
+      rgba(14, 14, 14, 0.42) 50%,
+      rgba(14, 14, 14, 0.15) 75%,
       rgba(14, 14, 14, 0.00) 100%
     ),
     /* 3. Same top + bottom darken (header logo + CTA row legibility) */
@@ -1145,6 +1147,12 @@ body::after {
   color: white;
   font-weight: 700;
   font-size: 0.875rem;
+  flex-shrink: 0;
+}
+.platform-logo {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
@@ -1979,6 +1987,19 @@ body::after {
 .mobile-menu-overlay.mobile-menu-open {
   transform: translateX(0);
   visibility: visible;
+}
+
+/* Ported theme: navy drawer to match the navy nav bar above. */
+[data-theme="ported"] .mobile-menu-overlay {
+  background-color: #1A2B5E;
+  background-image: linear-gradient(
+    180deg,
+    rgba(36, 53, 117, 0.6) 0%,
+    transparent 40%
+  );
+}
+[data-theme="ported"] .mobile-menu-link.is-active {
+  background: rgba(200, 147, 58, 0.16);
 }
 
 /* === Drawer top bar (logo + close button) === */
