@@ -1957,7 +1957,7 @@ body::after {
   bottom: 0;
   width: min(85vw, 320px);
   z-index: 100;
-  background-color: #0E0E0E;
+  background-color: var(--color-ink-900);
   /* Single faint warm gradient for character, no loud radials */
   background-image: linear-gradient(
     180deg,
@@ -2108,6 +2108,29 @@ body::after {
 .mobile-menu-cta:hover {
   background-color: var(--color-accent-500);
   box-shadow: 0 8px 20px -4px rgba(232, 128, 26, 0.55);
+}
+
+/* Ported (navy/gold) theme overrides — keep the drawer in palette
+   with the navy header and gold accents instead of warm orange. */
+[data-theme="ported"] .mobile-menu-overlay {
+  background-image: linear-gradient(
+    180deg,
+    rgba(200, 147, 58, 0.05) 0%,
+    transparent 30%
+  );
+}
+[data-theme="ported"] .mobile-menu-link.is-active {
+  background: rgba(200, 147, 58, 0.14);
+  color: var(--color-accent-300);
+}
+[data-theme="ported"] .mobile-menu-link.is-active svg {
+  color: var(--color-accent-300);
+}
+[data-theme="ported"] .mobile-menu-cta {
+  box-shadow: 0 6px 16px -4px rgba(200, 147, 58, 0.45);
+}
+[data-theme="ported"] .mobile-menu-cta:hover {
+  box-shadow: 0 8px 20px -4px rgba(200, 147, 58, 0.55);
 }
 
 /* ============================================
