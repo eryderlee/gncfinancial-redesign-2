@@ -48,6 +48,12 @@
 
     const stickyCta = document.getElementById('sticky-cta');
     if (!stickyCta) return;
+    // Don't show the sticky "Book a free consult" CTA on the contact
+    // page itself — they're already there.
+    if (window.location.pathname.startsWith('/contact')) {
+      stickyCta.style.display = 'none';
+      return;
+    }
 
     // Scroll-position check (works reliably on Safari, where IntersectionObserver
     // can mis-fire on full-viewport-height targets / after view transitions).

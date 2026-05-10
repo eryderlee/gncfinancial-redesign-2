@@ -440,10 +440,23 @@
 
       window.addEventListener("scroll", onScroll, { passive: true });
       window.addEventListener("resize", onResize);
+      // Mobile-specific catches: address bar show/hide, app switcher,
+      // bfcache restore, orientation change. These are layout-shift
+      // moments that don't always fire scroll/resize on mobile, and
+      // are the most common causes of randomly-appearing ghost lines.
+      const onVisibility = () => { if (!document.hidden) resettle(); };
+      const onOrient = () => resettle();
+      const onPageShow = () => resettle();
+      document.addEventListener("visibilitychange", onVisibility);
+      window.addEventListener("orientationchange", onOrient);
+      window.addEventListener("pageshow", onPageShow);
 
       __slCleanup = () => {
         window.removeEventListener("scroll", onScroll);
         window.removeEventListener("resize", onResize);
+        document.removeEventListener("visibilitychange", onVisibility);
+        window.removeEventListener("orientationchange", onOrient);
+        window.removeEventListener("pageshow", onPageShow);
         credo?.removeEventListener("transitionend", onTransitionEnd);
         credoObserver?.disconnect();
         bodyObserver?.disconnect();

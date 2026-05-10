@@ -636,14 +636,9 @@ body::after {
 }
 .hero-bg-switcher:hover .hero-bg-switcher-label { color: #fff; }
 
-/* Tighter on small screens. */
-@media (max-width: 640px) {
-  .hero-bg-switcher {
-    top: 1rem;
-    right: 1rem;
-    font-size: 0.72rem;
-    padding: 0.42rem 0.8rem;
-  }
+/* Hidden on mobile — preview tool, desktop/tablet only. */
+@media (max-width: 768px) {
+  .hero-bg-switcher { display: none; }
 }
 
 /* ============================================
